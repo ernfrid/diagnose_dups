@@ -35,7 +35,10 @@ we need a small amount of test data
 diagnose_dups -i bam_file -o dup_stats 
 */
 
+#include "common/Options.hpp"
+
 int main(int argc, char** argv) {
+    Options opts = Options(argc, argv);
 
     return 0;
 }
