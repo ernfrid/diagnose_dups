@@ -1,4 +1,4 @@
-project(diagnose_dups)
+project(common)
 
 set(SOURCES
     Options.cpp
@@ -6,3 +6,4 @@ set(SOURCES
 )
 
 add_library(common ${SOURCES})
+target_link_libraries(common ${Boost_LIBRARIES})
