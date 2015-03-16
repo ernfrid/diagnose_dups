@@ -1,34 +1,45 @@
 #pragma once
 
-//TODO Is this needed?
-extern "C" {
+#include <sam.h> //from htslib
 
-#include "sam.h" //from htslib
-
-}
-
+#include <math.h>
 #include <stdint.h>
+#include <string>
 
 class Read {
     public:
-        int32_t chromosome;
-        int32_t position;
-        bool reverse;
         int32_t insert_size;
-        int32_t mate_chromosome;
-        int32_t mate_position;
-        bool mate_reverse;
+        std::string flowcell;
+        int lane;
+        int tile;
+        int x;
+        int y;
 
     Read(bam1_t const* record);
     Read()
-        : chromosome(-1)
-        , position(-1)
-        , reverse(false)
-        , insert_size(0)
-        , mate_chromosome(-1)
-        , mate_position(-1)
-        , mate_reverse(false)
+        : insert_size(0)
+        , flowcell()
+        , lane(0)
+        , tile(0)
+        , x(0)
+        , y(0)
     {}
+
+    bool is_on_same_tile(Read const& read) const { 
+        return
+            flowcell == read.flowcell
+            && lane == read.lane
+            && tile == read.tile;
+    }
+
+    int distance(Read const& read) const {
+        //FIXME it would be better to check the return value here for overflow
+        return (int) hypot( (double) (x - read.x), (double) (y - read.y)) + 0.5;
+    }
+
+    private:
+
+    bool _parse_queryname(bam1_t const* record);
 };
 
 
