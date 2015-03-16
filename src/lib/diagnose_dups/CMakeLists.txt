@@ -3,6 +3,8 @@ project(diagnose_dups)
 set(SOURCES
     Read.hpp
     Read.cpp
+    Signature.hpp
+    Signature.cpp
 )
 
 add_library(diagnose_dups ${SOURCES})
