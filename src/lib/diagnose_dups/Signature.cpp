@@ -1,6 +1,17 @@
 #include "Signature.hpp"
 
 
+    Signature::Signature(bam1_t const* record)
+    : tid(record->core.tid)
+    , mtid(record->core.mtid)
+    , reverse(bam_is_rev(record))
+      , mreverse(bam_is_mrev(record))
+{
+    pos = _calculate_position(record);
+    mpos = _calculate_mate_position(record);
+
+}
+
 inline
 int32_t Signature::_calculate_position(bam1_t const* record) {
     int32_t tmp_pos = record->core.pos;
@@ -13,7 +24,7 @@ int32_t Signature::_calculate_position(bam1_t const* record) {
     }
     return tmp_pos;
 }
-                
+
 
 inline
 int32_t Signature::_calculate_mate_position(bam1_t const* record) {
@@ -72,7 +83,7 @@ int32_t Signature::_calculate_right_offset(char const* cigar) {
     long int oplen = -1;
     char opchr;
     bool first = true;
-    while(op_ptr != '\0') {
+    while(*op_ptr != '\0') {
         oplen = strtol(op_ptr, &op_ptr, 10);
         opchr = *op_ptr;
         op_ptr++;
@@ -126,7 +137,7 @@ int32_t Signature::_calculate_left_offset(char const* cigar) {
     char *op_ptr = (char *)cigar;
     long int oplen = -1;
     char opchr;
-    while(op_ptr != '\0') {
+    while(*op_ptr != '\0') {
         oplen = strtol(op_ptr, &op_ptr, 10);
         opchr = *op_ptr;
         op_ptr++;
@@ -139,12 +150,13 @@ int32_t Signature::_calculate_left_offset(char const* cigar) {
                     || opchr == 'X' 
                     || opchr == 'D'
                     || opchr == 'I') {
-               return offset; 
+                return offset; 
             }
             else {
                 //blow up
             }
         }
     }
+    return offset;
 }
 

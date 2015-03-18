@@ -10,6 +10,15 @@
 //they will be created directly from a bam1_t record
 
 class Signature {
+    private:
+    int32_t _calculate_position(bam1_t const* record);
+    int32_t _calculate_mate_position(bam1_t const* record);
+
+    inline int32_t _calculate_right_offset(bam1_t const* record);
+    inline int32_t _calculate_right_offset(char const* cigar);
+    inline int32_t _calculate_left_offset(bam1_t const* record);
+    inline int32_t _calculate_left_offset(char const* cigar);
+
     public:
         int32_t tid;
         int32_t mtid;
@@ -27,14 +36,7 @@ class Signature {
         , mreverse(false)
     {}
 
-    Signature(bam1_t const* record)
-        : tid(record->core.tid)
-          , mtid(record->core.mtid)
-          , pos(_calculate_position(record))
-          , mpos(_calculate_mate_position(record))
-          , reverse(bam_is_rev(record))
-          , mreverse(bam_is_mrev(record))
-    {}
+    Signature(bam1_t const* record);
 
     bool operator==(Signature const& rhs) const {
         return tid == rhs.tid
@@ -56,12 +58,4 @@ class Signature {
         return seed;
     }
 
-    private:
-    int32_t _calculate_position(bam1_t const* record);
-    int32_t _calculate_mate_position(bam1_t const* record);
-
-    int32_t _calculate_right_offset(bam1_t const* record);
-    int32_t _calculate_right_offset(char const* cigar);
-    int32_t _calculate_left_offset(bam1_t const* record);
-    int32_t _calculate_left_offset(char const* cigar);
 };
