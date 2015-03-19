@@ -14,11 +14,6 @@ class Signature {
     int32_t _calculate_position(bam1_t const* record);
     int32_t _calculate_mate_position(bam1_t const* record);
 
-    inline int32_t _calculate_right_offset(bam1_t const* record);
-    inline int32_t _calculate_right_offset(char const* cigar);
-    inline int32_t _calculate_left_offset(bam1_t const* record);
-    inline int32_t _calculate_left_offset(char const* cigar);
-
     public:
         int32_t tid;
         int32_t mtid;

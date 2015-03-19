@@ -84,7 +84,7 @@ TEST_F(TestSignature, _calculate_right_offset_from_bam) {
 }
 
 TEST_F(TestSignature, _calculate_right_offset_from_string) {
-
+    
 }
 
 TEST_F(TestSignature, _calculate_left_offset_from_bam) {

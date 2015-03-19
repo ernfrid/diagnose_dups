@@ -8,4 +8,4 @@ set(SOURCES
 )
 
 add_library(diagnose_dups ${SOURCES})
-target_link_libraries(diagnose_dups ${HTSlib_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(diagnose_dups common ${HTSlib_LIBRARIES} ${Boost_LIBRARIES})

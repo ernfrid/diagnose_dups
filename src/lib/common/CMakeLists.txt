@@ -3,6 +3,8 @@ project(common)
 set(SOURCES
     Options.cpp
     Options.hpp
+    Utility.hpp
+    Utility.cpp
 )
 
 add_library(common ${SOURCES})
