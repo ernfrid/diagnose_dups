@@ -55,13 +55,18 @@ TEST_F(TestRead, construction_from_bam_record) {
 
 TEST_F(TestRead, distance) {
     Read test_read;
-    test_read.x = 10206;
-    test_read.y = 3454;
+    test_read.x = 50;
+    test_read.y = 8;
 
     Read other_test_read;
-    other_test_read.x = 23847;
-    other_test_read.y = 4086;
-    ASSERT_EQ(13656,test_read.distance(other_test_read));
+    other_test_read.x = 25;
+    other_test_read.y = 16;
+    ASSERT_EQ(26,test_read.distance(other_test_read));
+
+    other_test_read.y = 24;
+    ASSERT_EQ(30,test_read.distance(other_test_read));
+
+
 }
 
 TEST_F(TestRead, is_on_same_tile) {
