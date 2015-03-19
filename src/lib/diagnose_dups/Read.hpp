@@ -34,7 +34,7 @@ class Read {
 
     int distance(Read const& read) const {
         //FIXME it would be better to check the return value here for overflow
-        return (int) hypot( (double) (x - read.x), (double) (y - read.y)) + 0.5;
+        return (int) (hypot( (double) (x - read.x), (double) (y - read.y)) + 0.5);
     }
 
     private:
