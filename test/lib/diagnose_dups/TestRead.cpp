@@ -54,13 +54,41 @@ TEST_F(TestRead, construction_from_bam_record) {
 }
 
 TEST_F(TestRead, distance) {
-    Read test_read(record);
-    Read other_test_read(record2);
+    Read test_read;
+    test_read.x = 10206;
+    test_read.y = 3454;
+
+    Read other_test_read;
+    other_test_read.x = 23847;
+    other_test_read.y = 4086;
     ASSERT_EQ(13656,test_read.distance(other_test_read));
 }
 
 TEST_F(TestRead, is_on_same_tile) {
-    Read test_read(record);
-    Read other_test_read(record2);
-    ASSERT_TRUE(test_read.is_on_same_tile(other_test_read));
+    //FIXME test all possible configurations of flow cell, lane, tile to make
+    //sure this is working
+    Read test_read;
+    test_read.flowcell = "Saint Louis";
+    test_read.lane = 1;
+    test_read.tile = 1011;
+
+    Read other_test_read;
+    other_test_read.flowcell = "Saint Louis";
+    other_test_read.lane = 1;
+    other_test_read.tile = 1011;
+
+    ASSERT_TRUE(test_read.is_on_same_tile(other_test_read)); 
+    
+    other_test_read.flowcell = "Indianapolis";
+    ASSERT_FALSE(test_read.is_on_same_tile(other_test_read)); 
+
+    other_test_read.flowcell = "Saint Louis";
+    other_test_read.lane = 6;
+    ASSERT_FALSE(test_read.is_on_same_tile(other_test_read)); 
+
+
+    other_test_read.lane = 1;
+    other_test_read.tile = 1012;
+    ASSERT_FALSE(test_read.is_on_same_tile(other_test_read)); 
+
 }
