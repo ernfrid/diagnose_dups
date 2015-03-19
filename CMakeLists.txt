@@ -50,5 +50,15 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 add_projects(src/lib)
 add_projects(src/exe)
 
+## Testing
+set(TEST_DATA_DIRECTORY ${CMAKE_SOURCE_DIR}/test-data)
+
+configure_file(test-data/TestData.hpp.in test-data/TestData.hpp @ONLY)
+include_directories(${PROJECT_BINARY_DIR}/test-data)
+
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/test-bin)
+enable_testing(true)
+add_projects(test/lib)
+
 ## Packaging
 include(PackageInfo.cmake)
