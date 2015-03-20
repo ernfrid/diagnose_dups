@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
     int32_t last_pos = -1;
     int32_t last_tid = -1;
     int32_t pos_window = 300;
-    
+
     typedef boost::unordered_map<int, int> histogram;
     histogram dup_insert_sizes;
     histogram distances;
@@ -80,11 +80,7 @@ int main(int argc, char** argv) {
 
                 if(last_tid != sig.tid 
                         || (last_tid == i->first.tid && (last_pos - pos_window) > i->first.pos)) {
-                    if(i->second.size() < 2) {
-                        //remove, it's not a dup
-                        signatures.erase(i);
-                    }
-                    else {
+                    if(i->second.size() > 1) {
                         //it's a dup
 
                         //add up number of dups
@@ -96,22 +92,19 @@ int main(int argc, char** argv) {
                             for(read_vec_iter distance_calc_iter = current_read_iter + 1; distance_calc_iter != i->second.end(); ++distance_calc_iter) {
                                 if(current_read_iter->is_on_same_tile(*distance_calc_iter) &&
                                         !(current_read_iter->flowcell == distance_calc_iter->flowcell
-                                         && current_read_iter->tile == distance_calc_iter->tile
-                                         && current_read_iter->lane == distance_calc_iter->lane
-                                         && current_read_iter->x == distance_calc_iter->x
-                                         && current_read_iter->y == distance_calc_iter->y)) {
+                                            && current_read_iter->tile == distance_calc_iter->tile
+                                            && current_read_iter->lane == distance_calc_iter->lane
+                                            && current_read_iter->x == distance_calc_iter->x
+                                            && current_read_iter->y == distance_calc_iter->y)) {
                                     int flow_cell_distance = current_read_iter->distance(*distance_calc_iter);
                                     distances[flow_cell_distance] += 1;
                                 }
                             }
                         }
-
-
-
-
                     }
+                    signatures.erase(i);
                 }
-//                cout << "There are " << i->second.size() << " reads in this bin\n";
+                //                cout << "There are " << i->second.size() << " reads in this bin\n";
             }
         }
         signatures[sig].push_back(read);
