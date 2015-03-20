@@ -78,20 +78,3 @@ TEST_F(TestSignature, hash_value) {
     ASSERT_FALSE(hash_value(test_sig) == hash_value(test_sig2));
 
 }
-/*
-TEST_F(TestSignature, _calculate_right_offset_from_bam) {
-
-}
-
-TEST_F(TestSignature, _calculate_right_offset_from_string) {
-    
-}
-
-TEST_F(TestSignature, _calculate_left_offset_from_bam) {
-
-}
-
-TEST_F(TestSignature, _calculate_left_offset_from_string) {
-
-}
-*/
