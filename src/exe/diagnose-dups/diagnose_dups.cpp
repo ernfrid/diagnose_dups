@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
 
     typedef boost::unordered_map<int, int> histogram;
     histogram dup_insert_sizes;
+    histogram nondup_insert_sizes;
     histogram distances;
     histogram number_of_dups;
 
@@ -101,6 +102,9 @@ int main(int argc, char** argv) {
                                 }
                             }
                         }
+                    }
+                    else {
+                        nondup_insert_sizes[abs(i->second[0].insert_size)] += 1;
                     }
                     signatures.erase(i);
                 }
