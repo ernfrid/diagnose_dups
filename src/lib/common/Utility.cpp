@@ -102,11 +102,15 @@ namespace cigar {
 
 
     int32_t calculate_right_offset(bam1_t const* record) {
-        //TODO handle if we don't have a cigar
-        uint32_t *cigar = bam_get_cigar(record);
-        std::vector<uint32_t> cigar_vec(cigar, cigar + record->core.n_cigar);
+        if(record->core.n_cigar) {
+            uint32_t *cigar = bam_get_cigar(record);
+            std::vector<uint32_t> cigar_vec(cigar, cigar + record->core.n_cigar);
 
-        return calculate_right_offset(cigar_vec);
+            return calculate_right_offset(cigar_vec);
+        }
+        else {
+            return 0; // no position offset if not cigar. Makes sense since read not mapped.
+        }
     }
 
     int32_t calculate_right_offset(char const* cigar) {
@@ -116,11 +120,15 @@ namespace cigar {
     }
 
     int32_t calculate_left_offset(bam1_t const* record) {
-        //TODO handle if we don't have a CIGAR
-        uint32_t *cigar = bam_get_cigar(record);
-        std::vector<uint32_t> cigar_vec(cigar, cigar + record->core.n_cigar);
+        if(record->core.n_cigar) {
+            uint32_t *cigar = bam_get_cigar(record);
+            std::vector<uint32_t> cigar_vec(cigar, cigar + record->core.n_cigar);
 
-        return calculate_left_offset(cigar_vec);
+            return calculate_left_offset(cigar_vec);
+        }
+        else {
+            return 0;
+        }
     }
 
     int32_t calculate_left_offset(char const* cigar) {
