@@ -72,6 +72,13 @@ int main(int argc, char** argv) {
     histogram number_of_dups;
 
     while(sam_read1(fp, header, record) >= 0) {
+        //skip non-properly paired alignments, they're not going to tell us anything about dups
+        //as well as anything secondary, qcfail or supplementary
+        if(!(record->core.flag & BAM_FPROPER_PAIR)
+                || (record->core.flag & (BAM_FSECONDARY | BAM_FQCFAIL | BAM_FSUPPLEMENTARY) ) 
+                || (record->core.flag & BAM_FREAD2)) {
+            continue;
+        }
         Read read(record);
         Signature sig(record);
         if(last_pos > -1) {
