@@ -104,15 +104,11 @@ int main(int argc, char** argv) {
                     }
                     signatures.erase(i);
                 }
-                //                cout << "There are " << i->second.size() << " reads in this bin\n";
             }
         }
         signatures[sig].push_back(read);
         last_tid = sig.tid;
         last_pos = sig.pos;
-        //cout << "The size of the buffer is " << signatures.size() << "\n";
-        //cout << "There are " << signatures.count(sig) << " buckets with current signature\n";
-        //cout << "There are " << signatures[sig].size() << " reads with current signature\n";
     }
     bam_destroy1(record);
     bam_hdr_destroy(header);
