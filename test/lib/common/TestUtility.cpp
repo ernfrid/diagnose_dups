@@ -75,10 +75,10 @@ TEST_F(TestUtility, cigar_right_offset_from_string) {
 
 TEST_F(TestUtility, cigar_left_offset_from_string) {
     ASSERT_EQ(0, calculate_left_offset("151M"));
-    ASSERT_EQ(20, calculate_left_offset("20H131M"));
-    ASSERT_EQ(25, calculate_left_offset("20H5S126M"));
-    ASSERT_EQ(25, calculate_left_offset("20H5S25X25=26M"));
-    ASSERT_EQ(140, calculate_left_offset("140S11M"));
+    ASSERT_EQ(-20, calculate_left_offset("20H131M"));
+    ASSERT_EQ(-25, calculate_left_offset("20H5S126M"));
+    ASSERT_EQ(-25, calculate_left_offset("20H5S25X25=26M"));
+    ASSERT_EQ(-140, calculate_left_offset("140S11M"));
     ASSERT_EQ(0, calculate_left_offset("140M11S"));
     ASSERT_EQ(0, calculate_left_offset("140M11H"));
     ASSERT_EQ(0, calculate_left_offset("100M10D51M"));
