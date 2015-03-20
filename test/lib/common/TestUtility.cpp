@@ -52,12 +52,30 @@ TEST_F(TestUtility, cigar_right_offset_from_bam) {
     ASSERT_EQ(150,calculate_right_offset(record2));
 }
 
+TEST_F(TestUtility, cigar_right_offset_from_bam_handles_no_cigar) {
+    //21M1I65M64S
+    //Offset to the right should be 21+65+64 or 150 - 1;
+    size_t tmp = record->core.n_cigar;
+    record->core.n_cigar = 0;
+    ASSERT_EQ(0,calculate_right_offset(record));
+    record->core.n_cigar = tmp;
+}
+
 TEST_F(TestUtility, cigar_left_offset_from_bam) {
     //21M1I65M64S
     //Offset to the right should be 21+65+64 or 150 - 1;
     ASSERT_EQ(0,calculate_left_offset(record));
     //151M
     ASSERT_EQ(0,calculate_left_offset(record2));
+}
+
+TEST_F(TestUtility, cigar_left_offset_from_bam_handles_no_cigar) {
+    //21M1I65M64S
+    //Offset to the right should be 21+65+64 or 150 - 1;
+    size_t tmp = record->core.n_cigar;
+    record->core.n_cigar = 0;
+    ASSERT_EQ(0,calculate_left_offset(record));
+    record->core.n_cigar = tmp;
 }
 
 TEST_F(TestUtility, cigar_right_offset_from_string) {
@@ -72,6 +90,7 @@ TEST_F(TestUtility, cigar_right_offset_from_string) {
     ASSERT_EQ(150, calculate_right_offset("140M5S6H"));
     ASSERT_EQ(160, calculate_right_offset("100M10D51M"));
 }
+
 
 TEST_F(TestUtility, cigar_left_offset_from_string) {
     ASSERT_EQ(0, calculate_left_offset("151M"));
