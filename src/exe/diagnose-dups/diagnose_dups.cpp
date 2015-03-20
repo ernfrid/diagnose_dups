@@ -97,6 +97,7 @@ int main(int argc, char** argv) {
                         typedef vector<Read>::iterator read_vec_iter;
                         for(read_vec_iter current_read_iter = i->second.begin(); current_read_iter != i->second.end() - 1; ++current_read_iter) {
                             dup_insert_sizes[abs(current_read_iter->insert_size)] += 1;
+                            nondup_insert_sizes[abs(current_read_iter->insert_size)] += 0;
                             for(read_vec_iter distance_calc_iter = current_read_iter + 1; distance_calc_iter != i->second.end(); ++distance_calc_iter) {
                                 if(current_read_iter->is_on_same_tile(*distance_calc_iter) &&
                                         !(current_read_iter->flowcell == distance_calc_iter->flowcell
@@ -112,6 +113,7 @@ int main(int argc, char** argv) {
                     }
                     else {
                         nondup_insert_sizes[abs(i->second[0].insert_size)] += 1;
+                        dup_insert_sizes[abs(i->second[0].insert_size)] += 0;
                     }
                     signatures.erase(i);
                 }
@@ -129,5 +131,18 @@ int main(int argc, char** argv) {
     for(histogram::iterator i = distances.begin(); i != distances.end(); ++i) {
         cout << i->first << "\t" << i->second << "\n";
     }
+    cout << "\n";
+
+    cout << "Number of dups at location\tFrequency\n";
+    for(histogram::iterator i = number_of_dups.begin(); i != number_of_dups.end(); ++i) {
+        cout << i->first << "\t" << i->second << "\n";
+    }
+    cout << "\n";
+
+    cout << "Size\tUniq frequency\tDup Frequency\n";
+    for(histogram::iterator i = nondup_insert_sizes.begin(); i != nondup_insert_sizes.end(); ++i) {
+        cout << i->first << "\t" << i->second << "\t" << dup_insert_sizes[i->first] << "\n";
+    }
+
     return 0;
 }
