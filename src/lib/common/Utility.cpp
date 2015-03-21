@@ -1,11 +1,22 @@
 #include "Utility.hpp"
+#include "config.hpp"
 
+#include <boost/format.hpp>
+#include <boost/spirit/include/qi_numeric.hpp>
+#include <boost/spirit/include/qi_parse.hpp>
+
+#include <cassert>
 #include <cstdlib>
+#include <cstring>
+#include <stdexcept>
 #include <vector>
 
+using boost::format;
+namespace qi = boost::spirit::qi;
 
 namespace cigar {
-    int opcode_for_char(char const& code) {
+
+    int opcode_for_char(char code) {
         //stupid, but easy
         //"MIDNSHP=XB"
         switch(code) {
@@ -34,18 +45,43 @@ namespace cigar {
         }
     }
 
-    //the following is a direct copy from htslib
+    bool valid_cigar_len(uint32_t len) {
+        return len <= bam_cigar_oplen(~0u);
+    }
+
+    //the following is a translated from htslib
     //it's not a function which is unfortunate
     //https://github.com/samtools/htslib/blob/ef59ef2d6425985732d41bf7389df569a2a14c0a/sam.c#L776-L791
-    std::vector<uint32_t> parse_string_to_cigar_vector(char const* string) {
+    std::vector<uint32_t> parse_string_to_cigar_vector(char const* cigar_string) {
+        char const* beg = cigar_string;
+        std::size_t len = std::strlen(beg);
+        char const* end = beg + len;
+
         std::vector<uint32_t> cigar;
-        char *op_ptr = (char *)string;
-        while(*op_ptr != '\0') {
-            uint32_t cigar_component = strtol(op_ptr, &op_ptr, 10)<<BAM_CIGAR_SHIFT;
-            int op = (uint8_t)*op_ptr >= 128 ? -1 : opcode_for_char(*op_ptr);
-            cigar_component |= op;
-            cigar.push_back(cigar_component);
-            op_ptr++;
+        // 2x performance increase
+        cigar.reserve(len);
+
+        for(; *beg != '\0'; ++beg) {
+            uint32_t oplen = 0;
+            // qi numeric parsing is much faster than strtoul
+            // it takes beg by reference and moves it to the first non-numeric
+            // character
+            if (UNLIKELY(!qi::parse(beg, end, qi::uint_, oplen) || !valid_cigar_len(oplen))) {
+                // do you want to get mad if this isn't a number?
+                throw std::runtime_error(str(format(
+                    "Error parsing cigar string %1%: expected number at position %2%"
+                    ) % cigar_string % (beg - cigar_string)));
+            }
+
+            int op = opcode_for_char(*beg);
+
+            if (UNLIKELY(op < 0)) {
+                throw std::runtime_error(str(format(
+                    "Error parsing cigar string %1%: invalid cigar op char at position %2%"
+                    ) % cigar_string % (beg - cigar_string)));
+            }
+
+            cigar.push_back(bam_cigar_gen(oplen, op));
         }
         return cigar;
     }
