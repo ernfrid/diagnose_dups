@@ -99,12 +99,7 @@ int main(int argc, char** argv) {
                             dup_insert_sizes[abs(current_read_iter->insert_size)] += 1;
                             nondup_insert_sizes[abs(current_read_iter->insert_size)] += 0;
                             for(read_vec_iter distance_calc_iter = current_read_iter + 1; distance_calc_iter != i->second.end(); ++distance_calc_iter) {
-                                if(current_read_iter->is_on_same_tile(*distance_calc_iter) &&
-                                        !(current_read_iter->flowcell == distance_calc_iter->flowcell
-                                            && current_read_iter->tile == distance_calc_iter->tile
-                                            && current_read_iter->lane == distance_calc_iter->lane
-                                            && current_read_iter->x == distance_calc_iter->x
-                                            && current_read_iter->y == distance_calc_iter->y)) {
+                                if(current_read_iter->is_on_same_tile(*distance_calc_iter)) {
                                     int flow_cell_distance = current_read_iter->distance(*distance_calc_iter);
                                     distances[flow_cell_distance] += 1;
                                 }
