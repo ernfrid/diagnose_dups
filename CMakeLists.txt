@@ -30,7 +30,7 @@ include_directories(${PROJECT_BINARY_DIR}/version)
 #include(BuildBoost)
 #include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(Boost 1.40.0 COMPONENTS program_options timer system REQUIRED)
+find_package(Boost 1.48.0 COMPONENTS program_options timer system chrono REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(HTSlib REQUIRED)
