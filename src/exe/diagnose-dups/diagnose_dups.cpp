@@ -103,8 +103,8 @@ int main(int argc, char** argv) {
     BamRecord record;
     SignatureBundle bundle;
     std::vector<std::size_t> sig_sizes;
-    std::size_t n_bundles;
-    std::size_t bundle_size_sum;
+    std::size_t n_bundles = 0;
+    std::size_t bundle_size_sum = 0;
     BundleProcessor proc;
     while(reader.next(record)) {
         int rv = bundle.add(record);
