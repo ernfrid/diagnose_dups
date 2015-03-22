@@ -39,8 +39,8 @@ public:
     }
 
     bool want(uint32_t flag) const {
-        return (!required_flags_ || (flag & required_flags_) == required_flags_)
-            && (!skip_flags_ || (flag & skip_flags_) == 0);
+        return (flag & required_flags_) == required_flags_
+            && (flag & skip_flags_) == 0;
     }
 
     bool next(bam1_t* record) {

@@ -98,8 +98,6 @@ namespace {
 int main(int argc, char** argv) {
     Options opts = Options(argc, argv);
 
-
-
     SamReader reader(opts.vm["input"].as<string>().c_str(), "r");
     reader.required_flags(BAM_FPROPER_PAIR);
     reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FREAD2 | BAM_FSUPPLEMENTARY);
