@@ -1,31 +1,34 @@
 #include "Read.hpp"
 
-#include <boost/tokenizer.hpp>
+#include "common/Parse.hpp"
+
+#include <algorithm>
 
 bool parse_read(bam1_t const* record, Read& read) {
     read.insert_size = record->core.isize;
 
-    std::string name = bam_get_qname(record);
-    boost::char_separator<char> sep(":");
-    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-    tokenizer tokens(name, sep);
-    std::size_t count = 0;
+    char const* name = bam_get_qname(record);
 
-    typedef tokenizer::iterator token_iter;
-    for (token_iter i = tokens.begin(); i != tokens.end(); ++i, ++count) {
-        if (count == 2)
-            read.flowcell = *i;
-        else if (count == 3)
-            read.lane = atoi(i->c_str());
-        else if (count == 4)
-            read.tile = atoi(i->c_str());
-        else if (count == 5)
-            read.x = atoi(i->c_str());
-        else if (count == 6) {
-            read.y = atoi(i->c_str());
-            return true;
-        }
-    }
+    // l_qname includes the null terminator
+    SimpleTokenizer tok(name, name + record->core.l_qname - 1, ':');
 
-    return false;
+    if (tok.skip(2) != 2)
+        return false;
+
+    if (!tok.extract(read.flowcell))
+        return false;
+
+    if (!tok.extract(read.lane))
+        return false;
+
+    if (!tok.extract(read.tile))
+        return false;
+
+    if (!tok.extract(read.x))
+        return false;
+
+    if (!tok.extract(read.y))
+        return false;
+
+    return true;
 }
