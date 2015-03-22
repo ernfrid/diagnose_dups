@@ -71,6 +71,7 @@ int main(int argc, char** argv) {
     histogram distances;
     histogram number_of_dups;
 
+    Read read;
     while(sam_read1(fp, header, record) >= 0) {
         //skip non-properly paired alignments, they're not going to tell us anything about dups
         //as well as anything secondary, qcfail or supplementary
@@ -79,7 +80,13 @@ int main(int argc, char** argv) {
                 || (record->core.flag & BAM_FREAD2)) {
             continue;
         }
-        Read read(record);
+
+        if (!parse_read(record, read)) {
+            std::cerr << "Failed to parse bam record, name = " << bam_get_qname(record) << "\n";
+            // XXX: would you rather abort?
+            continue;
+        }
+
         Signature sig(record);
         if(last_pos > -1) {
             //grab iterators
@@ -99,8 +106,8 @@ int main(int argc, char** argv) {
                             dup_insert_sizes[abs(current_read_iter->insert_size)] += 1;
                             nondup_insert_sizes[abs(current_read_iter->insert_size)] += 0;
                             for(read_vec_iter distance_calc_iter = current_read_iter + 1; distance_calc_iter != i->second.end(); ++distance_calc_iter) {
-                                if(current_read_iter->is_on_same_tile(*distance_calc_iter)) {
-                                    int flow_cell_distance = current_read_iter->distance(*distance_calc_iter);
+                                if(is_on_same_tile(*current_read_iter, *distance_calc_iter)) {
+                                    uint64_t flow_cell_distance = euclidean_distance(*current_read_iter, *distance_calc_iter);
                                     distances[flow_cell_distance] += 1;
                                 }
                             }
