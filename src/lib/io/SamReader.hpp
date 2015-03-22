@@ -13,6 +13,7 @@ public:
         , fp_(hts_open(path, mode))
         , required_flags_(0)
         , skip_flags_(0)
+        , record_count_(0)
     {
         using boost::format;
         if (!fp_ || !(header_ = sam_hdr_read(fp_))) {
@@ -46,10 +47,15 @@ public:
     bool next(bam1_t* record) {
         while (sam_read1(fp_, header_, record) > 0) {
             if (want(record->core.flag)) {
+                ++record_count_;
                 return true;
             }
         }
         return false;
+    }
+
+    std::size_t record_count() const {
+        return record_count_;
     }
 
     char const* path() const {
@@ -62,4 +68,5 @@ private:
     bam_hdr_t* header_;
     uint32_t required_flags_;
     uint32_t skip_flags_;
+    std::size_t record_count_;
 };
