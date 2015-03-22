@@ -35,6 +35,7 @@ we need a small amount of test data
 diagnose_dups -i bam_file -o dup_stats
 */
 
+#include "common/Histogram.hpp"
 #include "common/Options.hpp"
 #include "diagnose_dups/Read.hpp"
 #include "diagnose_dups/Signature.hpp"
@@ -52,15 +53,19 @@ diagnose_dups -i bam_file -o dup_stats
 using namespace std;
 
 namespace {
-    typedef boost::unordered_map<uint64_t, uint64_t> Histogram;
     typedef vector<Read> ReadVector;
     typedef boost::unordered_map<Signature, ReadVector> SignatureMap;
 
     struct BundleProcessor {
-        Histogram dup_insert_sizes;
-        Histogram nondup_insert_sizes;
-        Histogram distances;
-        Histogram number_of_dups;
+        Histogram<uint64_t> dup_insert_sizes;
+        Histogram<uint64_t> nondup_insert_sizes;
+        Histogram<uint64_t> distances;
+        Histogram<uint64_t> number_of_dups;
+        std::size_t total_dups;
+
+        BundleProcessor()
+            : total_dups(0)
+        {}
 
         void update_distances(ReadVector const& reads) {
             std::size_t n = reads.size();
@@ -87,6 +92,7 @@ namespace {
             for (SignatureMap::const_iterator i = sigmap.begin(); i != sigmap.end(); ++i) {
                 ReadVector const& reads = i->second;
                 if (reads.size() > 1) {
+                    ++total_dups;
                     ++number_of_dups[reads.size()];
                     update_distances(reads);
                 }
@@ -127,25 +133,26 @@ int main(int argc, char** argv) {
     ++n_bundles;
 
     cout << "Inter-tile distance\tFrequency\n";
-    for(Histogram::iterator i = proc.distances.begin(); i != proc.distances.end(); ++i) {
+    for(Histogram<uint64_t>::iterator i = proc.distances.begin(); i != proc.distances.end(); ++i) {
         cout << i->first << "\t" << i->second << "\n";
     }
     cout << "\n";
 
     cout << "Number of dups at location\tFrequency\n";
-    for(Histogram::iterator i = proc.number_of_dups.begin(); i != proc.number_of_dups.end(); ++i) {
+    for(Histogram<uint64_t>::iterator i = proc.number_of_dups.begin(); i != proc.number_of_dups.end(); ++i) {
         cout << i->first << "\t" << i->second << "\n";
     }
     cout << "\n";
 
     cout << "Size\tUniq frequency\tDup Frequency\n";
-    for(Histogram::iterator i = proc.nondup_insert_sizes.begin(); i != proc.nondup_insert_sizes.end(); ++i) {
+    for(Histogram<uint64_t>::iterator i = proc.nondup_insert_sizes.begin(); i != proc.nondup_insert_sizes.end(); ++i) {
         cout << i->first << "\t" << i->second << "\t" << proc.dup_insert_sizes[i->first] << "\n";
     }
 
     double mu = bundle_size_sum / double(n_bundles);
+    std::cerr << proc.total_dups << " duplicates found.\n";
     std::cerr << n_bundles << " bundles.\n";
-    std::cerr << "avg bundle size: " << mu << "\n";
+    std::cerr << "Average bundle size: " << mu << "\n";
 
     return 0;
 }
