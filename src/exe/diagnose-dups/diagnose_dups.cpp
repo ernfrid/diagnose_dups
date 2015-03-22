@@ -32,7 +32,7 @@ we need a histogram template
 
 we need a small amount of test data
 
-diagnose_dups -i bam_file -o dup_stats 
+diagnose_dups -i bam_file -o dup_stats
 */
 
 #include "common/Options.hpp"
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     }
     bam_hdr_t *header = sam_hdr_read(fp);
     bam1_t *record = bam_init1();
-    
+
     typedef vector<Read> read_vector;
     typedef boost::unordered_map<Signature, read_vector> signature_map;
     signature_map signatures;
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
         //skip non-properly paired alignments, they're not going to tell us anything about dups
         //as well as anything secondary, qcfail or supplementary
         if(!(record->core.flag & BAM_FPROPER_PAIR)
-                || (record->core.flag & (BAM_FSECONDARY | BAM_FQCFAIL | BAM_FSUPPLEMENTARY) ) 
+                || (record->core.flag & (BAM_FSECONDARY | BAM_FQCFAIL | BAM_FSUPPLEMENTARY) )
                 || (record->core.flag & BAM_FREAD2)) {
             continue;
         }
@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
             //iterate over sigs in signatures
             for(signature_map::iterator i = signatures.begin(); i != signatures.end(); ++i) {
 
-                if(last_tid != sig.tid 
+                if(last_tid != sig.tid
                         || (last_tid == i->first.tid && (last_pos - pos_window) > i->first.pos)) {
                     if(i->second.size() > 1) {
                         //it's a dup
