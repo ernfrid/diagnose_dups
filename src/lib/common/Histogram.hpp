@@ -2,7 +2,9 @@
 
 #include <boost/unordered_map.hpp>
 
+#include <algorithm>
 #include <stdint.h>
+#include <vector>
 
 template<typename T, typename CountType_ = uint64_t>
 struct Histogram {
@@ -12,8 +14,41 @@ struct Histogram {
     typedef typename Storage::iterator iterator;
     typedef typename Storage::const_iterator const_iterator;
 
+    struct Bin {
+        KeyType name;
+        CountType count;
+
+        Bin()
+            : name()
+            , count()
+        {}
+
+        Bin(KeyType const& name, CountType count)
+            : name(name)
+            , count(count)
+        {}
+
+        bool operator<(Bin const& rhs) const {
+            return name < rhs.name;
+        }
+
+        bool operator==(Bin const& rhs) const {
+            return name == rhs.name && count == rhs.count;
+        }
+    };
+
     CountType& operator[](KeyType const& key) {
         return data[key];
+    }
+
+    std::vector<Bin> as_sorted_vector() const {
+        std::vector<Bin> rv;
+        rv.reserve(size());
+        for (const_iterator i = begin(); i != end(); ++i) {
+            rv.push_back(Bin(i->first, i->second));
+        }
+        std::sort(rv.begin(), rv.end());
+        return rv;
     }
 
     iterator begin() {

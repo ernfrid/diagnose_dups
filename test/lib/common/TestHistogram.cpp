@@ -21,3 +21,15 @@ TEST(TestHistogram, merge) {
     EXPECT_EQ(expected, x);
     EXPECT_EQ(2u, y.size());
 }
+
+TEST(TestHistogram, as_sorted_vector) {
+    Histogram<int> x;
+    typedef Histogram<int>::Bin Bin;
+    std::vector<Bin> expected;
+    for (int i = 0; i < 100; ++i) {
+        ++x[i];
+        expected.push_back(Bin(i, 1));
+    }
+
+    EXPECT_EQ(expected, x.as_sorted_vector());
+}
