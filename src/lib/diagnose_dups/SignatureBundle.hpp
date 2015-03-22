@@ -20,6 +20,10 @@ public:
         data_.reserve(256);
     }
 
+    // returns:
+    //   -1 on parse error,
+    //    0 if the bundle doesn't want the record (i.e., there's a gap)
+    //    1 if the bundle does want the record
     int add(BamRecord const& record) {
         SigRead item;
         if (!parse_read(record, item.read))
@@ -32,6 +36,9 @@ public:
             max_pos_ = item.sig.pos;
         }
 
+        // if chromosome changed or the read's reported start position is
+        // after the max start position after clipping is accounted for,
+        // then it doesn't belong in this bundle
         if (tid_ != record->core.tid || record->core.pos > max_pos_)
             return 0;
 
