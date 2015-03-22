@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
     int32_t last_tid = -1;
     int32_t pos_window = 300;
 
-    typedef boost::unordered_map<int, int> histogram;
+    typedef boost::unordered_map<uint64_t, uint64_t> histogram;
     histogram dup_insert_sizes;
     histogram nondup_insert_sizes;
     histogram distances;
