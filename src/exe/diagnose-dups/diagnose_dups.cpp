@@ -52,39 +52,43 @@ diagnose_dups -i bam_file -o dup_stats
 using namespace std;
 
 namespace {
-    typedef boost::unordered_map<uint64_t, uint64_t> histogram;
-    typedef vector<Read> read_vector;
-    typedef boost::unordered_map<Signature, read_vector> signature_map;
+    typedef boost::unordered_map<uint64_t, uint64_t> Histogram;
+    typedef vector<Read> ReadVector;
+    typedef boost::unordered_map<Signature, ReadVector> SignatureMap;
 
     struct BundleProcessor {
-        histogram dup_insert_sizes;
-        histogram nondup_insert_sizes;
-        histogram distances;
-        histogram number_of_dups;
+        Histogram dup_insert_sizes;
+        Histogram nondup_insert_sizes;
+        Histogram distances;
+        Histogram number_of_dups;
+
+        void update_distances(ReadVector const& reads) {
+            std::size_t n = reads.size();
+            for (std::size_t i = 0; i < n - 1; ++i) {
+                ++dup_insert_sizes[abs(reads[i].insert_size)];
+                nondup_insert_sizes[abs(reads[i].insert_size)] += 0;
+                for (std::size_t j = i + 1; j < n; ++j) {
+                    if (is_on_same_tile(reads[i], reads[j])) {
+                        uint64_t flow_cell_distance = euclidean_distance(reads[i], reads[j]);
+                        ++distances[flow_cell_distance];
+                    }
+                }
+            }
+        }
 
         void process(SignatureBundle const& bundle) {
             std::vector<SigRead> const& sigreads = bundle.data();
 
-            signature_map sigmap;
+            SignatureMap sigmap;
             for (std::size_t i = 0; i < sigreads.size(); ++i) {
                 sigmap[sigreads[i].sig].push_back(sigreads[i].read);
             }
 
-            for(signature_map::const_iterator i = sigmap.begin(); i != sigmap.end(); ++i) {
-                if (i->second.size() > 1) {
-                        ++number_of_dups[i->second.size()];
-
-                        typedef vector<Read>::const_iterator read_vec_iter;
-                        for(read_vec_iter cri = i->second.begin(); cri != i->second.end() - 1; ++cri) {
-                            ++dup_insert_sizes[abs(cri->insert_size)];
-                            nondup_insert_sizes[abs(cri->insert_size)] += 0;
-                            for(read_vec_iter dci = cri + 1; dci != i->second.end(); ++dci) {
-                                if(is_on_same_tile(*cri, *dci)) {
-                                    uint64_t flow_cell_distance = euclidean_distance(*cri, *dci);
-                                    distances[flow_cell_distance] += 1;
-                                }
-                            }
-                        }
+            for (SignatureMap::const_iterator i = sigmap.begin(); i != sigmap.end(); ++i) {
+                ReadVector const& reads = i->second;
+                if (reads.size() > 1) {
+                    ++number_of_dups[reads.size()];
+                    update_distances(reads);
                 }
             }
         }
@@ -125,19 +129,19 @@ int main(int argc, char** argv) {
     ++n_bundles;
 
     cout << "Inter-tile distance\tFrequency\n";
-    for(histogram::iterator i = proc.distances.begin(); i != proc.distances.end(); ++i) {
+    for(Histogram::iterator i = proc.distances.begin(); i != proc.distances.end(); ++i) {
         cout << i->first << "\t" << i->second << "\n";
     }
     cout << "\n";
 
     cout << "Number of dups at location\tFrequency\n";
-    for(histogram::iterator i = proc.number_of_dups.begin(); i != proc.number_of_dups.end(); ++i) {
+    for(Histogram::iterator i = proc.number_of_dups.begin(); i != proc.number_of_dups.end(); ++i) {
         cout << i->first << "\t" << i->second << "\n";
     }
     cout << "\n";
 
     cout << "Size\tUniq frequency\tDup Frequency\n";
-    for(histogram::iterator i = proc.nondup_insert_sizes.begin(); i != proc.nondup_insert_sizes.end(); ++i) {
+    for(Histogram::iterator i = proc.nondup_insert_sizes.begin(); i != proc.nondup_insert_sizes.end(); ++i) {
         cout << i->first << "\t" << i->second << "\t" << proc.dup_insert_sizes[i->first] << "\n";
     }
 
