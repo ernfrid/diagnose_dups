@@ -8,7 +8,6 @@ Read::Read(bam1_t const* record)
     : insert_size(record->core.isize)
 {
     _parse_queryname(record);
-    
 }
 
 //This part taken almost directly from Travis' cellstats
@@ -19,7 +18,7 @@ bool Read::_parse_queryname(bam1_t const* record) {
     typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
     tokenizer tokens(name, sep);
     std::size_t count = 0;
-    
+
     typedef tokenizer::iterator token_iter;
     for (token_iter i = tokens.begin(); i != tokens.end(); ++i, ++count) {
         if (count == 2)

@@ -25,7 +25,7 @@ class Read {
         , y(0)
     {}
 
-    bool is_on_same_tile(Read const& read) const { 
+    bool is_on_same_tile(Read const& read) const {
         return
             flowcell == read.flowcell
             && lane == read.lane
