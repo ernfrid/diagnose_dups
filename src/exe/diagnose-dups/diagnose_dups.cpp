@@ -46,6 +46,7 @@ diagnose_dups -i bam_file -o dup_stats
 
 #include <sam.h>
 
+#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -53,7 +54,18 @@ using namespace std;
 int main(int argc, char** argv) {
     Options opts = Options(argc, argv);
 
-    SamReader reader(opts.vm["input"].as<string>().c_str(), "r");
+    std::ofstream out;
+    std::ostream* out_ptr = &std::cout;
+    if (!opts.output_file.empty() && opts.output_file != "-") {
+        out.open(opts.output_file.c_str());
+        if (!out) {
+            std::cerr << "Failed to open output file " << opts.output_file << "\n";
+            return 1;
+        }
+        out_ptr = &out;
+    }
+
+    SamReader reader(opts.input_file.c_str(), "r");
     reader.required_flags(BAM_FPROPER_PAIR);
     reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FREAD2 | BAM_FSUPPLEMENTARY);
 
@@ -75,7 +87,7 @@ int main(int argc, char** argv) {
 
     // don't forget the last bundle
     proc.process(bundle);
-    proc.write_output(std::cout);
+    proc.write_output(*out_ptr);
 
     return 0;
 }
