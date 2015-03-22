@@ -24,7 +24,7 @@ public:
     //   -1 on parse error,
     //    0 if the bundle doesn't want the record (i.e., there's a gap)
     //    1 if the bundle does want the record
-    int add(BamRecord const& record) {
+    int add(bam1_t const* record) {
         SigRead item;
         if (!parse_read(record, item.read))
             return -1;

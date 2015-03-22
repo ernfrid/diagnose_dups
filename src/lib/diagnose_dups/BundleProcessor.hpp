@@ -4,6 +4,7 @@
 #include "common/Histogram.hpp"
 
 #include <cstddef>
+#include <iostream>
 #include <stdint.h>
 
 struct BundleProcessor {
@@ -15,9 +16,13 @@ struct BundleProcessor {
     Histogram<uint64_t> distances;
     Histogram<uint64_t> number_of_dups;
     std::size_t total_dups;
+    std::size_t bundle_size_sum;
+    std::size_t n_bundles;
 
     BundleProcessor()
         : total_dups(0)
+        , bundle_size_sum(0)
+        , n_bundles(0)
     {}
 
     void update_distances(ReadVector const& reads) {
@@ -35,6 +40,9 @@ struct BundleProcessor {
     }
 
     void process(SignatureBundle const& bundle) {
+        bundle_size_sum += bundle.size();
+        ++n_bundles;
+
         std::vector<SigRead> const& sigreads = bundle.data();
 
         SignatureMap sigmap;
@@ -51,5 +59,42 @@ struct BundleProcessor {
             }
         }
     }
-};
 
+    void merge(BundleProcessor& x) {
+        dup_insert_sizes.merge(x.dup_insert_sizes);
+        nondup_insert_sizes.merge(x.nondup_insert_sizes);
+        distances.merge(x.distances);
+        number_of_dups.merge(x.number_of_dups);
+        total_dups += x.total_dups;
+        bundle_size_sum += x.bundle_size_sum;
+        n_bundles += x.n_bundles;
+    }
+
+    void write_output(std::ostream& os) {
+        typedef Histogram<uint64_t>::VectorType HVec;
+        HVec dist = distances.as_sorted_vector();
+        os << "Inter-tile distance\tFrequency\n";
+        for(HVec::const_iterator i = dist.begin(); i != dist.end(); ++i) {
+            os << i->name << "\t" << i->count << "\n";
+        }
+        os << "\n";
+
+        HVec ndup = number_of_dups.as_sorted_vector();
+        os << "Number of dups at location\tFrequency\n";
+        for(HVec::const_iterator i = ndup.begin(); i != ndup.end(); ++i) {
+            os << i->name << "\t" << i->count << "\n";
+        }
+        os << "\n";
+
+        HVec isizes = nondup_insert_sizes.as_sorted_vector();
+        os << "Size\tUniq frequency\tDup Frequency\n";
+        for(HVec::const_iterator i = isizes.begin(); i != isizes.end(); ++i) {
+            os << i->name << "\t" << i->count << "\t" << dup_insert_sizes[i->name] << "\n";
+        }
+
+        double mu = bundle_size_sum / double(n_bundles);
+        std::cerr << total_dups << " duplicates found.\n";
+        std::cerr << n_bundles << " bundles.\n";
+        std::cerr << "Average bundle size: " << mu << "\n";
+    }
+};

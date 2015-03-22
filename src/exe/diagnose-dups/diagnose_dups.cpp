@@ -46,10 +46,7 @@ diagnose_dups -i bam_file -o dup_stats
 
 #include <sam.h>
 
-#include <boost/unordered_map.hpp>
-
 #include <iostream>
-#include <numeric>
 
 using namespace std;
 
@@ -62,11 +59,8 @@ int main(int argc, char** argv) {
 
     BamRecord record;
     SignatureBundle bundle;
-    std::vector<std::size_t> sig_sizes;
-    std::size_t n_bundles = 0;
-    std::size_t bundle_size_sum = 0;
     BundleProcessor proc;
-    while(reader.next(record)) {
+    while (reader.next(record)) {
         int rv = bundle.add(record);
         if (rv == -1) {
             std::cerr << "Failed to parse bam record, name = " << bam_get_qname(record) << "\n";
@@ -74,41 +68,14 @@ int main(int argc, char** argv) {
             continue;
         }
         else if (rv == 0) {
-            bundle_size_sum += bundle.size();
-            ++n_bundles;
             proc.process(bundle);
             bundle.clear();
         }
     }
+
+    // don't forget the last bundle
     proc.process(bundle);
-    bundle_size_sum += bundle.size();
-    ++n_bundles;
-
-    typedef Histogram<uint64_t>::VectorType HVec;
-    HVec dist = proc.distances.as_sorted_vector();
-    cout << "Inter-tile distance\tFrequency\n";
-    for(HVec::const_iterator i = dist.begin(); i != dist.end(); ++i) {
-        cout << i->name << "\t" << i->count << "\n";
-    }
-    cout << "\n";
-
-    HVec ndup = proc.number_of_dups.as_sorted_vector();
-    cout << "Number of dups at location\tFrequency\n";
-    for(HVec::const_iterator i = ndup.begin(); i != ndup.end(); ++i) {
-        cout << i->name << "\t" << i->count << "\n";
-    }
-    cout << "\n";
-
-    HVec isizes = proc.nondup_insert_sizes.as_sorted_vector();
-    cout << "Size\tUniq frequency\tDup Frequency\n";
-    for(HVec::const_iterator i = isizes.begin(); i != isizes.end(); ++i) {
-        cout << i->name << "\t" << i->count << "\t" << proc.dup_insert_sizes[i->name] << "\n";
-    }
-
-    double mu = bundle_size_sum / double(n_bundles);
-    std::cerr << proc.total_dups << " duplicates found.\n";
-    std::cerr << n_bundles << " bundles.\n";
-    std::cerr << "Average bundle size: " << mu << "\n";
+    proc.write_output(std::cout);
 
     return 0;
 }
