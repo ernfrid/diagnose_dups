@@ -95,23 +95,17 @@ int main(int argc, char** argv) {
     Options opts = Options(argc, argv);
 
 
-    signature_map signatures;
-
-    BundleProcessor proc;
-
-    Read read;
-    std::vector<Signature> sigs;
-    sigs.reserve(100);
 
     SamReader reader(opts.vm["input"].as<string>().c_str(), "r");
     reader.required_flags(BAM_FPROPER_PAIR);
     reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FREAD2 | BAM_FSUPPLEMENTARY);
 
     BamRecord record;
-
     SignatureBundle bundle;
-
     std::vector<std::size_t> sig_sizes;
+    std::size_t n_bundles;
+    std::size_t bundle_size_sum;
+    BundleProcessor proc;
     while(reader.next(record)) {
         int rv = bundle.add(record);
         if (rv == -1) {
@@ -120,12 +114,15 @@ int main(int argc, char** argv) {
             continue;
         }
         else if (rv == 0) {
-            sig_sizes.push_back(bundle.size());
+            bundle_size_sum += bundle.size();
+            ++n_bundles;
             proc.process(bundle);
             bundle.clear();
         }
     }
     proc.process(bundle);
+    bundle_size_sum += bundle.size();
+    ++n_bundles;
 
     cout << "Inter-tile distance\tFrequency\n";
     for(histogram::iterator i = proc.distances.begin(); i != proc.distances.end(); ++i) {
@@ -144,8 +141,8 @@ int main(int argc, char** argv) {
         cout << i->first << "\t" << i->second << "\t" << proc.dup_insert_sizes[i->first] << "\n";
     }
 
-    double mu = std::accumulate(sig_sizes.begin(), sig_sizes.end(), 0ULL) / double(sig_sizes.size());
-    std::cerr << sig_sizes.size() << " bundles.\n";
+    double mu = bundle_size_sum / double(n_bundles);
+    std::cerr << n_bundles << " bundles.\n";
     std::cerr << "avg bundle size: " << mu << "\n";
 
     return 0;
