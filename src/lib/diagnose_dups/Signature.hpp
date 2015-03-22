@@ -28,6 +28,8 @@ struct Signature {
 
     Signature(bam1_t const* record);
 
+    void parse(bam1_t const* record);
+
     friend bool operator==(Signature const& lhs, Signature const& rhs) {
         return lhs.tid == rhs.tid
             && lhs.mtid == rhs.mtid
