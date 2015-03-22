@@ -1,9 +1,8 @@
 #include "Utility.hpp"
+#include "Parse.hpp"
 #include "config.hpp"
 
 #include <boost/format.hpp>
-#include <boost/spirit/include/qi_numeric.hpp>
-#include <boost/spirit/include/qi_parse.hpp>
 
 #include <algorithm>
 #include <cassert>
@@ -14,7 +13,6 @@
 #include <vector>
 
 using boost::format;
-namespace qi = boost::spirit::qi;
 
 namespace cigar {
 
@@ -68,7 +66,7 @@ namespace cigar {
             // qi numeric parsing is much faster than strtoul
             // it takes beg by reference and moves it to the first non-numeric
             // character
-            if(UNLIKELY(!qi::parse(beg, end, qi::uint_, oplen) || !valid_cigar_len(oplen))) {
+            if(UNLIKELY(!auto_parse(beg, end, oplen) || !valid_cigar_len(oplen))) {
                 // do you want to get mad if this isn't a number?
                 throw std::runtime_error(str(format(
                     "Error parsing cigar string %1%: expected number at position %2%"
