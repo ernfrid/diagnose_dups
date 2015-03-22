@@ -84,21 +84,25 @@ int main(int argc, char** argv) {
     bundle_size_sum += bundle.size();
     ++n_bundles;
 
+    typedef Histogram<uint64_t>::VectorType HVec;
+    HVec dist = proc.distances.as_sorted_vector();
     cout << "Inter-tile distance\tFrequency\n";
-    for(Histogram<uint64_t>::iterator i = proc.distances.begin(); i != proc.distances.end(); ++i) {
-        cout << i->first << "\t" << i->second << "\n";
+    for(HVec::const_iterator i = dist.begin(); i != dist.end(); ++i) {
+        cout << i->name << "\t" << i->count << "\n";
     }
     cout << "\n";
 
+    HVec ndup = proc.number_of_dups.as_sorted_vector();
     cout << "Number of dups at location\tFrequency\n";
-    for(Histogram<uint64_t>::iterator i = proc.number_of_dups.begin(); i != proc.number_of_dups.end(); ++i) {
-        cout << i->first << "\t" << i->second << "\n";
+    for(HVec::const_iterator i = ndup.begin(); i != ndup.end(); ++i) {
+        cout << i->name << "\t" << i->count << "\n";
     }
     cout << "\n";
 
+    HVec isizes = proc.nondup_insert_sizes.as_sorted_vector();
     cout << "Size\tUniq frequency\tDup Frequency\n";
-    for(Histogram<uint64_t>::iterator i = proc.nondup_insert_sizes.begin(); i != proc.nondup_insert_sizes.end(); ++i) {
-        cout << i->first << "\t" << i->second << "\t" << proc.dup_insert_sizes[i->first] << "\n";
+    for(HVec::const_iterator i = isizes.begin(); i != isizes.end(); ++i) {
+        cout << i->name << "\t" << i->count << "\t" << proc.dup_insert_sizes[i->name] << "\n";
     }
 
     double mu = bundle_size_sum / double(n_bundles);

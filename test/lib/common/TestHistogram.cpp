@@ -25,7 +25,7 @@ TEST(TestHistogram, merge) {
 TEST(TestHistogram, as_sorted_vector) {
     Histogram<int> x;
     typedef Histogram<int>::Bin Bin;
-    std::vector<Bin> expected;
+    Histogram<int>::VectorType expected;
     for (int i = 0; i < 100; ++i) {
         ++x[i];
         expected.push_back(Bin(i, 1));

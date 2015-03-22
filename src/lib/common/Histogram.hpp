@@ -37,12 +37,14 @@ struct Histogram {
         }
     };
 
+    typedef std::vector<Bin> VectorType;
+
     CountType& operator[](KeyType const& key) {
         return data[key];
     }
 
-    std::vector<Bin> as_sorted_vector() const {
-        std::vector<Bin> rv;
+    VectorType as_sorted_vector() const {
+        VectorType rv;
         rv.reserve(size());
         for (const_iterator i = begin(); i != end(); ++i) {
             rv.push_back(Bin(i->first, i->second));
