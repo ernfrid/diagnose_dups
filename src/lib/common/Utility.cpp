@@ -5,9 +5,11 @@
 #include <boost/spirit/include/qi_numeric.hpp>
 #include <boost/spirit/include/qi_parse.hpp>
 
+#include <algorithm>
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
+#include <numeric>
 #include <stdexcept>
 #include <vector>
 
@@ -66,7 +68,7 @@ namespace cigar {
             // qi numeric parsing is much faster than strtoul
             // it takes beg by reference and moves it to the first non-numeric
             // character
-            if (UNLIKELY(!qi::parse(beg, end, qi::uint_, oplen) || !valid_cigar_len(oplen))) {
+            if(UNLIKELY(!qi::parse(beg, end, qi::uint_, oplen) || !valid_cigar_len(oplen))) {
                 // do you want to get mad if this isn't a number?
                 throw std::runtime_error(str(format(
                     "Error parsing cigar string %1%: expected number at position %2%"
@@ -75,7 +77,7 @@ namespace cigar {
 
             int op = opcode_for_char(*beg);
 
-            if (UNLIKELY(op < 0)) {
+            if(UNLIKELY(op < 0)) {
                 throw std::runtime_error(str(format(
                     "Error parsing cigar string %1%: invalid cigar op char at position %2%"
                     ) % cigar_string % (beg - cigar_string)));
@@ -86,63 +88,56 @@ namespace cigar {
         return cigar;
     }
 
-    int32_t calculate_right_offset(std::vector<uint32_t> const& cigar) {
-        //htslib doesn't quite do what we want here as softclipping doesn't consume the reference
-        //also, samblaster considers leading soft or hardclips in unpacking the coords. But only the first one.
-        //TODO What is valid here?
-        int32_t offset = 0;
-        typedef std::vector<uint32_t>::const_iterator iter;
-        iter i = cigar.begin();
-        while( (bam_cigar_type(bam_cigar_op(*i)) == 0x00 
-                    || bam_cigar_op(*i) == BAM_CSOFT_CLIP) 
-                && i != cigar.end()) {
-            //NOTE that you could just increment in the while statement.
-            //I think this is less prone to misinterpretation
-            //This should strip any leading Hardclips or softclips. Note that in the pathological case of a read that is fully hard/softclipped this may not make sense
-            ++i;
-        }
-        while(i != cigar.end()) {
-            if(bam_cigar_type(bam_cigar_op(*i))&2 
-                    || bam_cigar_op(*i) == BAM_CSOFT_CLIP
-                    || bam_cigar_op(*i) == BAM_CHARD_CLIP) {
-                offset += bam_cigar_oplen(*i);
-            }
-            ++i;
-        }
-        return offset - 1;
+    bool affects_right_offset(uint32_t cigar) {
+        uint32_t op = bam_cigar_op(cigar);
+        return op != BAM_CSOFT_CLIP && bam_cigar_type(op) != 0;
     }
 
-    int32_t calculate_left_offset(std::vector<uint32_t> const& cigar) {
-        int32_t offset = 0;
-        typedef std::vector<uint32_t>::const_iterator iter;
-        iter i = cigar.begin();
-
-        //all we care about is if the start of this guy is softclipped
-        //NOTE we are not going to check for properly constructed CIGAR strings
-        while(bam_cigar_type(bam_cigar_op(*i)) == 0x00
-                && bam_cigar_op(*i) != BAM_CHARD_CLIP
-                && i != cigar.end()) {
-            //NOTE that you could just increment in the while statement.
-            //I think this is less prone to misinterpretation
-            //This should strip any leading 
-            ++i;
+    uint32_t right_offset_add(int32_t current, uint32_t cigar) {
+        uint32_t op = bam_cigar_op(cigar);
+        if(bam_cigar_type(op) & 2 || op == BAM_CSOFT_CLIP || op == BAM_CHARD_CLIP) {
+            current += bam_cigar_oplen(cigar);
         }
-
-        while(bam_cigar_op(*i) == BAM_CSOFT_CLIP
-                || bam_cigar_op(*i) == BAM_CHARD_CLIP) {
-            offset -= bam_cigar_oplen(*i);
-            ++i;
-        }
-        return offset;
+        return current;
     }
 
+    int32_t calculate_right_offset(uint32_t const* beg, uint32_t const* end) {
+        // HTSlib doesn't quite do what we want here as softclipping
+        // doesn't consume the reference.
+        // Also, samblaster considers leading soft or hardclips in
+        // unpacking the coords. But only the first one.
+        uint32_t const* first = std::find_if(beg, end, affects_right_offset);
+        return std::accumulate(first, end, 0, right_offset_add) - 1;
+    }
+
+    bool affects_left_offset(uint32_t cigar) {
+        uint32_t op = bam_cigar_op(cigar);
+        return op == BAM_CHARD_CLIP || bam_cigar_type(op) != 0;
+    }
+
+    bool is_not_clipping(uint32_t cigar) {
+        uint32_t op = bam_cigar_op(cigar);
+        return op != BAM_CHARD_CLIP && op != BAM_CSOFT_CLIP;
+    }
+
+    int32_t left_offset_sub(int32_t current, uint32_t cigar) {
+        uint32_t op = bam_cigar_op(cigar);
+        if(op == BAM_CSOFT_CLIP || op == BAM_CHARD_CLIP) {
+            current -= bam_cigar_oplen(cigar);
+        }
+        return current;
+    }
+
+    int32_t calculate_left_offset(uint32_t const* beg, uint32_t const* end) {
+        uint32_t const* first = std::find_if(beg, end, affects_left_offset);
+        uint32_t const* last = std::find_if(first, end, is_not_clipping);
+        return std::accumulate(first, last, 0, left_offset_sub);
+    }
 
     int32_t calculate_right_offset(bam1_t const* record) {
         if(record->core.n_cigar) {
             uint32_t *cigar = bam_get_cigar(record);
-            std::vector<uint32_t> cigar_vec(cigar, cigar + record->core.n_cigar);
-
-            return calculate_right_offset(cigar_vec);
+            return calculate_right_offset(cigar, cigar + record->core.n_cigar);
         }
         else {
             return 0; // no position offset if not cigar. Makes sense since read not mapped.
@@ -151,16 +146,13 @@ namespace cigar {
 
     int32_t calculate_right_offset(char const* cigar) {
         std::vector<uint32_t> cigar_vec = parse_string_to_cigar_vector(cigar);
-
-        return calculate_right_offset(cigar_vec);
+        return calculate_right_offset(cigar_vec.data(), cigar_vec.data() + cigar_vec.size());
     }
 
     int32_t calculate_left_offset(bam1_t const* record) {
         if(record->core.n_cigar) {
             uint32_t *cigar = bam_get_cigar(record);
-            std::vector<uint32_t> cigar_vec(cigar, cigar + record->core.n_cigar);
-
-            return calculate_left_offset(cigar_vec);
+            return calculate_left_offset(cigar, cigar + record->core.n_cigar);
         }
         else {
             return 0;
@@ -169,9 +161,6 @@ namespace cigar {
 
     int32_t calculate_left_offset(char const* cigar) {
         std::vector<uint32_t> cigar_vec = parse_string_to_cigar_vector(cigar);
-
-        return calculate_left_offset(cigar_vec);
-
+        return calculate_left_offset(cigar_vec.data(), cigar_vec.data() + cigar_vec.size());
     }
-
 }
