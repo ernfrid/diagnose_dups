@@ -39,7 +39,7 @@ public:
         // if chromosome changed or the read's reported start position is
         // after the max start position after clipping is accounted for,
         // then it doesn't belong in this bundle
-        if (tid_ != record->core.tid || record->core.pos > max_pos_)
+        if (tid_ != item.sig.tid || item.sig.pos > max_pos_)
             return 0;
 
         max_pos_ = std::max(max_pos_, item.sig.pos);
