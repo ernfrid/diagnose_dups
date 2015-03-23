@@ -59,7 +59,7 @@ using boost::format;
 
 namespace {
     void run(Options const& opts) {
-        boost::timer::auto_cpu_timer timer;
+        boost::timer::auto_cpu_timer timer(std::cerr);
         std::ofstream out;
         std::ostream* out_ptr = &std::cout;
         if (!opts.output_file.empty() && opts.output_file != "-") {
