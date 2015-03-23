@@ -83,14 +83,11 @@ namespace {
         while (reader.next(record)) {
             int rv = bundle.add(record);
             if (rv == -1) {
-                if (++parse_failures < 5) {
+                if (++parse_failures <= 5) {
                     std::cerr << "Failed to parse bam record, name = "
                         << bam_get_qname(record) << "\n";
-                }
-                else if (parse_failures == 5) {
-                    std::cerr << "Failed to parse bam record, name = "
-                        << bam_get_qname(record)
-                        << ", max warning limit reached, disabling...\n";
+                    if (parse_failures == 5)
+                        std::cerr << "max warning limit reached, disabling...\n";
                 }
 
                 // XXX: would you rather abort?
