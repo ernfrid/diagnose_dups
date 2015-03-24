@@ -27,7 +27,7 @@ struct BundleProcessor {
 
     void update_distances(ReadVector const& reads) {
         std::size_t n = reads.size();
-        for (std::size_t i = 0; i < n - 1; ++i) {
+        for (std::size_t i = 0; i < n; ++i) {
             ++dup_insert_sizes[abs(reads[i].insert_size)];
             nondup_insert_sizes[abs(reads[i].insert_size)] += 0;
             for (std::size_t j = i + 1; j < n; ++j) {
