@@ -57,6 +57,10 @@ struct BundleProcessor {
                 ++number_of_dups[reads.size()];
                 update_distances(reads);
             }
+            else {
+                dup_insert_sizes[abs(reads[0].insert_size)] += 0;
+                ++nondup_insert_sizes[abs(reads[0].insert_size)];
+            }
         }
     }
 
