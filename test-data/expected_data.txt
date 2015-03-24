@@ -13,6 +13,6 @@ Size    Uniq frequency  Dup Frequency
 143 0   2
 375 1   0
 475 1   0
-575 0   4
+575 1   4
 980	0	3
 1000	1	0
