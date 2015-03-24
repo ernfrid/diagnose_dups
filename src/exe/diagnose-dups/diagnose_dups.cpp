@@ -96,6 +96,9 @@ namespace {
             else if (rv == 0) {
                 proc.process(bundle);
                 bundle.clear();
+                //if rv was 0 then the attempt to previously add this read
+                //failed and it needs to be re-added to this fresh bundle
+                bundle.add(record);
             }
         }
 
