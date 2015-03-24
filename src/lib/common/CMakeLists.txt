@@ -8,4 +8,4 @@ set(SOURCES
 )
 
 add_library(common ${SOURCES})
-target_link_libraries(common ${Boost_LIBRARIES})
+target_link_libraries(common rt ${Boost_LIBRARIES})

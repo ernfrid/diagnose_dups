@@ -1,40 +1,34 @@
 #include "Read.hpp"
 
-#include <boost/tokenizer.hpp>
+#include "common/Parse.hpp"
 
-#include<iostream>
+#include <algorithm>
 
-Read::Read(bam1_t const* record)
-    : insert_size(record->core.isize)
-{
-    _parse_queryname(record);
-    
-}
+bool parse_read(bam1_t const* record, Read& read) {
+    read.insert_size = record->core.isize;
 
-//This part taken almost directly from Travis' cellstats
-inline
-bool Read::_parse_queryname(bam1_t const* record) {
-    std::string name = bam_get_qname(record);
-    boost::char_separator<char> sep(":");
-    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-    tokenizer tokens(name, sep);
-    std::size_t count = 0;
-    
-    typedef tokenizer::iterator token_iter;
-    for (token_iter i = tokens.begin(); i != tokens.end(); ++i, ++count) {
-        if (count == 2)
-            flowcell = *i;
-        else if (count == 3)
-            lane = atoi(i->c_str());
-        else if (count == 4)
-            tile = atoi(i->c_str());
-        else if (count == 5)
-            x = atoi(i->c_str());
-        else if (count == 6) {
-            y=atoi(i->c_str());
-            return true;
-        }
-    }
+    char const* name = bam_get_qname(record);
 
-    return false;
+    // l_qname includes the null terminator
+    SimpleTokenizer tok(name, name + record->core.l_qname - 1, ':');
+
+    if (tok.skip(2) != 2)
+        return false;
+
+    if (!tok.extract(read.flowcell))
+        return false;
+
+    if (!tok.extract(read.lane))
+        return false;
+
+    if (!tok.extract(read.tile))
+        return false;
+
+    if (!tok.extract(read.x))
+        return false;
+
+    if (!tok.extract(read.y))
+        return false;
+
+    return true;
 }

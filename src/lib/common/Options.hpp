@@ -17,6 +17,9 @@ class Options {
         po::variables_map vm;
 
         Options(int argc, char** argv);
+
+        std::string input_file;
+        std::string output_file;
 };
 
 

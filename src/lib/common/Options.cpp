@@ -21,10 +21,10 @@ Options::Options(int argc, char** argv) {
         if(vm.count("help")) {
             cerr << desc << "\n";
             exit(0);
-        } 
+        }
 
         if(vm.count("version")) {
-            cerr << "version: " << __g_prog_version 
+            cerr << "version: " << __g_prog_version
                 << " (commit " << __g_commit_hash << ")\n";
             exit(0);
         }
@@ -40,8 +40,8 @@ po::options_description Options::_options_description() {
     desc.add_options()
         ("help,h", "produce this message")
         ("version,v", "output the version")
-        ("input,i", po::value<string>(), "the input file")
-        ("output,o", po::value<string>(), "the output file")
+        ("input,i", po::value<>(&input_file)->default_value("-"), "the input file")
+        ("output,o", po::value<>(&output_file)->default_value("-"), "the output file")
         ;
     return desc;
 }

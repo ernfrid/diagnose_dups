@@ -44,7 +44,8 @@ bam1_t* TestRead::record2 = NULL;
 bam_hdr_t* TestRead::header = NULL;
 
 TEST_F(TestRead, construction_from_bam_record) {
-    Read test_read(record);
+    Read test_read;
+    ASSERT_TRUE(parse_read(record, test_read));
     ASSERT_EQ(65, test_read.insert_size);
     ASSERT_EQ("H25NTCCXX", test_read.flowcell);
     ASSERT_EQ(6, test_read.lane);
@@ -61,12 +62,10 @@ TEST_F(TestRead, distance) {
     Read other_test_read;
     other_test_read.x = 25;
     other_test_read.y = 16;
-    ASSERT_EQ(26,test_read.distance(other_test_read));
+    ASSERT_EQ(26u, euclidean_distance(test_read, other_test_read));
 
     other_test_read.y = 24;
-    ASSERT_EQ(30,test_read.distance(other_test_read));
-
-
+    ASSERT_EQ(30u, euclidean_distance(test_read, other_test_read));
 }
 
 TEST_F(TestRead, is_on_same_tile) {
@@ -82,18 +81,17 @@ TEST_F(TestRead, is_on_same_tile) {
     other_test_read.lane = 1;
     other_test_read.tile = 1011;
 
-    ASSERT_TRUE(test_read.is_on_same_tile(other_test_read)); 
-    
+    ASSERT_TRUE(is_on_same_tile(test_read, other_test_read));
+
     other_test_read.flowcell = "Indianapolis";
-    ASSERT_FALSE(test_read.is_on_same_tile(other_test_read)); 
+    ASSERT_FALSE(is_on_same_tile(test_read, other_test_read));
 
     other_test_read.flowcell = "Saint Louis";
     other_test_read.lane = 6;
-    ASSERT_FALSE(test_read.is_on_same_tile(other_test_read)); 
+    ASSERT_FALSE(is_on_same_tile(test_read, other_test_read));
 
 
     other_test_read.lane = 1;
     other_test_read.tile = 1012;
-    ASSERT_FALSE(test_read.is_on_same_tile(other_test_read)); 
-
+    ASSERT_FALSE(is_on_same_tile(test_read, other_test_read));
 }

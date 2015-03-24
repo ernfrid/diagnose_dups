@@ -7,10 +7,11 @@
 
 set(HTSLIB_SEARCH_DIRS
     ${HTSLIB_SEARCH_DIRS}
-    $ENV{HTLSIB_ROOT}
+    $ENV{HTSLIB_ROOT}
     /gsc/pkg/bio/htslib
     /usr
 )
+message(STATUS "Searching for HTSLIB in ${HTSLIB_SEARCH_DIRS}")
 
 set(_htslib_ver_path "htslib-${htslib_FIND_VERSION}")
 include(LibFindMacros)

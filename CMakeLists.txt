@@ -14,6 +14,10 @@ set(CMAKE_MODULE_PATH
 include(TestHelper)
 include(VersionHelper)
 include(ProjectHelper)
+include(PlatformChecks)
+
+configure_file(config/config.hpp.in config/config.hpp @ONLY)
+include_directories(${PROJECT_BINARY_DIR}/config)
 
 configure_file(version/version.h.in version/version.h @ONLY)
 include_directories(${PROJECT_BINARY_DIR}/version)
@@ -26,10 +30,10 @@ include_directories(${PROJECT_BINARY_DIR}/version)
 #include(BuildBoost)
 #include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(Boost 1.40.0 COMPONENTS program_options REQUIRED)
+find_package(Boost 1.48.0 COMPONENTS program_options timer system chrono REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(HTSlib)
+find_package(HTSlib REQUIRED)
 include_directories(${HTSlib_INCLUDE_DIRS})
 
 if (CMAKE_COMPILER_IS_GNUCC)

@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(TEST_LIBS 
+set(TEST_LIBS
     common
     ${HTSlib_LIBRARIES}
     ${Boost_LIBRARIES})
 include_directories(${GTEST_INCLUDE_DIRS})
 
 add_unit_tests(TestCommonLib
+    TestHistogram.cpp
     TestUtility.cpp
+    TestParse.cpp
     )

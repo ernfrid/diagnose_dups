@@ -1,0 +1,4 @@
+#pragma once
+
+#define LIKELY(x) @DD_C_LIKELY_X_EXPR@
+#define UNLIKELY(x) @DD_C_UNLIKELY_X_EXPR@
