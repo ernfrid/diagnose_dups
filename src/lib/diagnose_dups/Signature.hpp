@@ -39,6 +39,34 @@ struct Signature {
             && lhs.mreverse == rhs.mreverse;
     }
 
+    friend bool operator<(Signature const& lhs, Signature const& rhs) {
+        if (lhs.tid < rhs.tid) {
+            return true;
+        }
+        else {
+            if (lhs.tid == rhs.tid) {
+                if (lhs.pos < rhs.pos) {
+                    return true;
+                }
+                else if (lhs.pos == rhs.pos) {
+                    if (lhs.mtid < rhs.mtid) {
+                        return true;
+                    }
+                    else if (lhs.mtid == rhs.mtid) {
+                        if (lhs.mpos < rhs.mpos) {
+                            return true;
+                        }
+                        else if (lhs.mpos == rhs.mpos) {
+                            return lhs.reverse < rhs.reverse
+                                || lhs.mreverse < rhs.mreverse;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     friend std::size_t hash_value(Signature const& sig) {
         std::size_t seed = boost::hash_value(sig.tid);
         boost::hash_combine(seed, sig.mtid);
