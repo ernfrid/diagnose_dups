@@ -38,6 +38,18 @@ struct BundleProcessor {
             }
         }
     }
+    
+    void operator()(ReadVector const& reads) {
+        if (reads.size() > 1) {
+            ++total_dups;
+            ++number_of_dups[reads.size()];
+            update_distances(reads);
+        }
+        else {
+            dup_insert_sizes[abs(reads[0].insert_size)] += 0;
+            ++nondup_insert_sizes[abs(reads[0].insert_size)];
+        }
+    }
 
     void process(SignatureBundle const& bundle) {
         bundle_size_sum += bundle.size();
