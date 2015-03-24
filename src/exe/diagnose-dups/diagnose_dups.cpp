@@ -1,5 +1,6 @@
 #include "common/Histogram.hpp"
 #include "common/Options.hpp"
+#include "diagnose_dups/SignatureBuffer.hpp"
 #include "diagnose_dups/BundleProcessor.hpp"
 #include "diagnose_dups/Read.hpp"
 #include "diagnose_dups/Signature.hpp"
@@ -42,8 +43,11 @@ namespace {
         BamRecord record;
         SignatureBundle bundle;
         BundleProcessor proc;
+        SignatureBuffer buffer(1000, proc);
         std::size_t parse_failures = 0;
         while (reader.next(record)) {
+            buffer.add(record);
+            /*
             int rv = bundle.add(record);
             if (rv == -1) {
                 if (++parse_failures <= 5) {
@@ -63,8 +67,8 @@ namespace {
                 //failed and it needs to be re-added to this fresh bundle
                 bundle.add(record);
             }
+        */
         }
-
         if (parse_failures) {
             double pct = parse_failures * 100.0;
             pct /= reader.record_count();
@@ -75,8 +79,10 @@ namespace {
         }
 
         // don't forget the last bundle
-        proc.process(bundle);
-        proc.write_output(*out_ptr);
+        //proc.process(bundle);
+        //proc.write_output(*out_ptr);
+        buffer.process();
+        buffer.write_output(*out_ptr);
     }
 }
 
