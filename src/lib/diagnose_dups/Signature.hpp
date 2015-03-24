@@ -6,7 +6,6 @@
 #include <stdint.h>
 
 //the intent is for this class to store samblaster signatures
-//they will be used as hash keys in an unordered map
 //they will be created directly from a bam1_t record
 
 struct Signature {
@@ -39,6 +38,7 @@ struct Signature {
             && lhs.mreverse == rhs.mreverse;
     }
 
+    //FIXME The below is ugly. Think about a clear, but concise way to do this.
     friend bool operator<(Signature const& lhs, Signature const& rhs) {
         if (lhs.tid < rhs.tid) {
             return true;
@@ -57,6 +57,9 @@ struct Signature {
                             return true;
                         }
                         else if (lhs.mpos == rhs.mpos) {
+                            //this should upcast the bools to int
+                            //false will be 0
+                            //true will be 1
                             return lhs.reverse < rhs.reverse
                                 || lhs.mreverse < rhs.mreverse;
                         }
