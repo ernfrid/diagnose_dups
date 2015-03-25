@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdint.h>
 
-struct BundleProcessor {
+struct BufferProcessor {
     typedef vector<Read> ReadVector;
     typedef boost::unordered_map<Signature, ReadVector> SignatureMap;
 
@@ -16,7 +16,7 @@ struct BundleProcessor {
     Histogram<uint64_t> number_of_dups;
     std::size_t total_dups;
 
-    BundleProcessor()
+    BufferProcessor()
         : total_dups(0)
     {}
 
@@ -46,7 +46,7 @@ struct BundleProcessor {
         }
     }
 
-    void merge(BundleProcessor& x) {
+    void merge(BufferProcessor& x) {
         dup_insert_sizes.merge(x.dup_insert_sizes);
         nondup_insert_sizes.merge(x.nondup_insert_sizes);
         distances.merge(x.distances);

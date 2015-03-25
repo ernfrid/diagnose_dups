@@ -2,7 +2,7 @@
 
 #include "Signature.hpp"
 #include "Read.hpp"
-#include "BundleProcessor.hpp"
+#include "BufferProcessor.hpp"
 #include "io/BamRecord.hpp"
 
 #include <map>
@@ -14,7 +14,7 @@ class SignatureBuffer {
         typedef std::map<Signature, std::vector<Read> > SigRead;
         typedef SigRead::iterator SigReadIter;
 
-        SignatureBuffer(int32_t window_size, BundleProcessor processor) 
+        SignatureBuffer(int32_t window_size, BufferProcessor processor) 
             : window_(window_size)
             , processor_(processor) {
             }
@@ -54,6 +54,6 @@ class SignatureBuffer {
 
     private:
         int32_t window_;
-        BundleProcessor processor_;
+        BufferProcessor processor_;
         std::map<Signature, std::vector<Read> > buffer_;
 };

@@ -1,7 +1,7 @@
 #include "common/Histogram.hpp"
 #include "common/Options.hpp"
 #include "diagnose_dups/SignatureBuffer.hpp"
-#include "diagnose_dups/BundleProcessor.hpp"
+#include "diagnose_dups/BufferProcessor.hpp"
 #include "diagnose_dups/Read.hpp"
 #include "diagnose_dups/Signature.hpp"
 #include "io/BamRecord.hpp"
@@ -40,7 +40,7 @@ namespace {
         reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FREAD2 | BAM_FSUPPLEMENTARY);
 
         BamRecord record;
-        BundleProcessor proc;
+        BufferProcessor proc;
         SignatureBuffer buffer(1000, proc);
         std::size_t parse_failures = 0;
         while (reader.next(record)) {
