@@ -4,7 +4,6 @@
 #include "diagnose_dups/BundleProcessor.hpp"
 #include "diagnose_dups/Read.hpp"
 #include "diagnose_dups/Signature.hpp"
-#include "diagnose_dups/SignatureBundle.hpp"
 #include "io/BamRecord.hpp"
 #include "io/SamReader.hpp"
 
@@ -41,7 +40,6 @@ namespace {
         reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FREAD2 | BAM_FSUPPLEMENTARY);
 
         BamRecord record;
-        SignatureBundle bundle;
         BundleProcessor proc;
         SignatureBuffer buffer(1000, proc);
         std::size_t parse_failures = 0;
@@ -78,9 +76,7 @@ namespace {
                 << fixed << setprecision(2) << pct << "%).\n\n";
         }
 
-        // don't forget the last bundle
-        //proc.process(bundle);
-        //proc.write_output(*out_ptr);
+        // don't forget the rest of the buffer
         buffer.process_all();
         buffer.write_output(*out_ptr);
     }

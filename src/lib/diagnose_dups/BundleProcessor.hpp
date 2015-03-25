@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SignatureBundle.hpp"
 #include "common/Histogram.hpp"
 
 #include <cstddef>
@@ -16,13 +15,9 @@ struct BundleProcessor {
     Histogram<uint64_t> distances;
     Histogram<uint64_t> number_of_dups;
     std::size_t total_dups;
-    std::size_t bundle_size_sum;
-    std::size_t n_bundles;
 
     BundleProcessor()
         : total_dups(0)
-        , bundle_size_sum(0)
-        , n_bundles(0)
     {}
 
     void update_distances(ReadVector const& reads) {
@@ -51,39 +46,12 @@ struct BundleProcessor {
         }
     }
 
-    void process(SignatureBundle const& bundle) {
-        bundle_size_sum += bundle.size();
-        ++n_bundles;
-
-        std::vector<SigRead> const& sigreads = bundle.data();
-
-        SignatureMap sigmap;
-        for (std::size_t i = 0; i < sigreads.size(); ++i) {
-            sigmap[sigreads[i].sig].push_back(sigreads[i].read);
-        }
-
-        for (SignatureMap::const_iterator i = sigmap.begin(); i != sigmap.end(); ++i) {
-            ReadVector const& reads = i->second;
-            if (reads.size() > 1) {
-                ++total_dups;
-                ++number_of_dups[reads.size()];
-                update_distances(reads);
-            }
-            else {
-                dup_insert_sizes[abs(reads[0].insert_size)] += 0;
-                ++nondup_insert_sizes[abs(reads[0].insert_size)];
-            }
-        }
-    }
-
     void merge(BundleProcessor& x) {
         dup_insert_sizes.merge(x.dup_insert_sizes);
         nondup_insert_sizes.merge(x.nondup_insert_sizes);
         distances.merge(x.distances);
         number_of_dups.merge(x.number_of_dups);
         total_dups += x.total_dups;
-        bundle_size_sum += x.bundle_size_sum;
-        n_bundles += x.n_bundles;
     }
 
     void write_output(std::ostream& os) {
@@ -108,9 +76,6 @@ struct BundleProcessor {
             os << i->name << "\t" << i->count << "\t" << dup_insert_sizes[i->name] << "\n";
         }
 
-        double mu = bundle_size_sum / double(n_bundles);
         std::cerr << total_dups << " duplicates found.\n";
-        std::cerr << n_bundles << " bundles.\n";
-        std::cerr << "Average bundle size: " << mu << "\n";
     }
 };
