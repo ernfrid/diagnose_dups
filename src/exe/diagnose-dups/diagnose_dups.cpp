@@ -81,7 +81,7 @@ namespace {
         // don't forget the last bundle
         //proc.process(bundle);
         //proc.write_output(*out_ptr);
-        buffer.process();
+        buffer.process_all();
         buffer.write_output(*out_ptr);
     }
 }

@@ -42,7 +42,7 @@ class SignatureBuffer {
             buffer_.erase(buffer_.begin(), i);
         }
 
-        void process() {
+        void process_all() {
             for (SigReadIter i = buffer_.begin(); i != buffer_.end(); ++i)
                 processor_(i->second);
         }
