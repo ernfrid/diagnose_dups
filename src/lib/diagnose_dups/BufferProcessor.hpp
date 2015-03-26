@@ -54,27 +54,53 @@ struct BufferProcessor {
         total_dups += x.total_dups;
     }
 
+    //XXX This is terrible and should abstracted out
     void write_output(std::ostream& os) {
+        os << "{\n"; //start json
         typedef Histogram<uint64_t>::VectorType HVec;
         HVec dist = distances.as_sorted_vector();
-        os << "Inter-tile distance\tFrequency\n";
+        os << " \"distance\": [\n";
         for(HVec::const_iterator i = dist.begin(); i != dist.end(); ++i) {
-            os << i->name << "\t" << i->count << "\n";
+            os << "    { "
+               << "\"intertile_distance\": " << i->name
+               << ", "
+               << "\"count\": " << i->count
+               << " }";
+            if (i + 1 != dist.end()) {
+                os << ",\n";
+            }
         }
-        os << "\n";
+        os << "\n ],\n";
 
+        os << " \"num_times_duplicated\": [\n";
         HVec ndup = number_of_dups.as_sorted_vector();
-        os << "Number of dups at location\tFrequency\n";
         for(HVec::const_iterator i = ndup.begin(); i != ndup.end(); ++i) {
-            os << i->name << "\t" << i->count << "\n";
+            os << "    { "
+               << "\"num_duplicates\": " << i->name
+               << ", "
+               << "\"count\": " << i->count
+               << " }";
+            if (i + 1 != ndup.end()) {
+                os << ",\n";
+            }
         }
-        os << "\n";
+        os << "\n ],\n";
 
+        os << " \"insert_size\": [\n";
         HVec isizes = nondup_insert_sizes.as_sorted_vector();
-        os << "Size\tUniq frequency\tDup Frequency\n";
         for(HVec::const_iterator i = isizes.begin(); i != isizes.end(); ++i) {
-            os << i->name << "\t" << i->count << "\t" << dup_insert_sizes[i->name] << "\n";
+            os << "    { "
+               << "\"insert_size\": " << i->name
+               << ", "
+               << "\"unique_count\": " << i->count
+               << ", "
+               << "\"duplicate_count\": " << dup_insert_sizes[i->name]
+               << " }";
+            if (i + 1 != isizes.end()) {
+                os << ",\n";
+            }
         }
+        os << "\n ]\n}\n";
 
         std::cerr << total_dups << " duplicates found.\n";
     }
