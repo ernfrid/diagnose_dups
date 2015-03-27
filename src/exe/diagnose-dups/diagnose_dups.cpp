@@ -37,7 +37,7 @@ namespace {
 
         SamReader reader(opts.input_file.c_str(), "r");
         reader.required_flags(BAM_FPROPER_PAIR);
-        reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FREAD2 | BAM_FSUPPLEMENTARY);
+        reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FSUPPLEMENTARY);
 
         BamRecord record;
         BufferProcessor proc;
