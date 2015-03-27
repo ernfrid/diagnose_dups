@@ -5,8 +5,9 @@ header = """@HD	VN:1.3	SO:coordinate
 @SQ	SN:2	LN:243199373"""
 
 exemplar_read = """machine:1:flowcell:1:1101:1:1	99	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M"""
-outside_tile_dup = """machine:1:flowcell:1:1102:1:1	99	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M"""
+outside_tile_dup = """machine:1:flowcell:1:1102:1:1	163	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M"""
 inside_tile_dup = """machine:1:flowcell:1:1101:1:10	99	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M""" # distance should be 9
+non_primary_dup = """machine:1:flowcell:1:1101:1:10	419	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M""" # distance should be 9
 intervening_read = """machine:1:flowcell:1:1102:1:20	99	1	15730	60	4M	=	16153	575	AGGG	AFFF	MC:Z:5M"""
  
 clipped_dup = """machine:1:flowcell:1:1102:1:13	99	1	15731	60	2S3M	=	16153	575	CAGGG	AAFFF	MC:Z:5M""" # distance should be 12
@@ -27,6 +28,7 @@ print "\n".join((
     exemplar_read,
     outside_tile_dup,
     inside_tile_dup,
+    non_primary_dup,
     intervening_read,
     clipped_dup,
     non_dup,
