@@ -62,8 +62,6 @@ sam_lines = (
         "machine:1:flowcell:1:1104:1:20	147	2	18000	60	5M	=	17020	-980	TACAC	AAFFF	MC:Z:5M",
         "machine:1:flowcell:1:1104:20:1	147	2	18000	60	5M	=	17020	-980	TACAC	AAFFF	MC:Z:5M",
 
-
-
         )
 
 print "\n".join(sam_lines)
