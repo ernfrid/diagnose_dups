@@ -1,19 +1,21 @@
 {
  "summary": [
-    { "total_fragments": 13, "total_duplicate_fragments": 9, "total_intertile_duplicates": 4 }
+    { "total_fragments": 15, "total_duplicate_fragments": 11, "total_intertile_duplicates": 4 }
  ],
  "distance": [
     { "intertile_distance": 9, "count": 1 },
     { "intertile_distance": 12, "count": 1 },
+    { "intertile_distance": 13, "count": 1 },
     { "intertile_distance": 19, "count": 3 },
     { "intertile_distance": 27, "count": 1 }
  ],
  "num_times_duplicated": [
-    { "num_duplicates": 2, "count": 1 },
+    { "num_duplicates": 2, "count": 2 },
     { "num_duplicates": 3, "count": 1 },
     { "num_duplicates": 4, "count": 1 },
  ],
  "insert_size": [
+    { "insert_size": 0, "unique_count": 0, "duplicate_count": 2 },
     { "insert_size": 143, "unique_count": 0, "duplicate_count": 2 },
     { "insert_size": 375, "unique_count": 1, "duplicate_count": 0 },
     { "insert_size": 475, "unique_count": 1, "duplicate_count": 0 },

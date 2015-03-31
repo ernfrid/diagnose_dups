@@ -62,6 +62,11 @@ sam_lines = (
         "machine:1:flowcell:1:1104:1:20	147	2	18000	60	5M	=	17020	-980	TACAC	AAFFF	MC:Z:5M",
         "machine:1:flowcell:1:1104:20:1	147	2	18000	60	5M	=	17020	-980	TACAC	AAFFF	MC:Z:5M",
 
+        #These are intended to be fully overlapping readpairs.
+        "machine:1:flowcell:1:1105:1:1	99	2	19000	60	5M	=	19000	0	TACAC	AAFFF	MC:Z:5M",
+        "machine:1:flowcell:1:1105:1:1	147	2	19000	60	5M	=	19000	0	TACAC	AAFFF	MC:Z:5M",
+        "machine:1:flowcell:1:1105:1:14	99	2	19000	60	5M	=	19000	0	TACAC	AAFFF	MC:Z:5M",
+        "machine:1:flowcell:1:1105:1:14	147	2	19000	60	5M	=	19000	0	TACAC	AAFFF	MC:Z:5M",
         )
 
 print "\n".join(sam_lines)
