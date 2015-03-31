@@ -32,7 +32,7 @@ int32_t Signature::_calculate_mate_position(bam1_t const* record) {
     uint8_t *mate_cigar_tag_ptr = bam_aux_get(record, "MC");
     if(mate_cigar_tag_ptr != 0) {
         char const* mc_string = bam_aux2Z(mate_cigar_tag_ptr);
-        if(reverse) {
+        if(mreverse) {
             tmp_mpos += cigar::calculate_right_offset(mc_string);
         }
         else {
