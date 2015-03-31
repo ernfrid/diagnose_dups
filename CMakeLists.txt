@@ -61,6 +61,8 @@ configure_file(test-data/TestData.hpp.in test-data/TestData.hpp @ONLY)
 include_directories(${PROJECT_BINARY_DIR}/test-data)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/test-bin)
+
+include_directories(${CMAKE_SOURCE_DIR}/test)
 enable_testing(true)
 add_projects(test/lib)
 

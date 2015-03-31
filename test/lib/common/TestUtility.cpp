@@ -1,5 +1,6 @@
 #include "common/Utility.hpp"
 #include "TestData.hpp"
+#include "testing/TestWithBamRecord.hpp"
 
 #include <boost/timer/timer.hpp>
 
@@ -8,43 +9,10 @@
 #include <stdexcept>
 #include <iostream>
 
-using namespace std;
 using namespace cigar; //for testing cigar parsing functions
 
-class TestUtility : public ::testing::Test {
-    public:
-        static bam1_t *record;
-        static bam1_t *record2;
-        static bam_hdr_t *header;
-
-        static void SetUpTestCase() {
-            htsFile *fp = hts_open(TEST_BAMS[0].path.c_str(),"r");
-            if(fp == 0) {
-                cerr << "Unable to open " << TEST_BAMS[0].path << "\n";
-                throw std::runtime_error("Error running tests");
-            }
-            record = bam_init1();
-            record2 = bam_init1();
-            header = sam_hdr_read(fp);
-            if(sam_read1(fp, header, record) <= 0) {
-                throw std::runtime_error("Error running tests");
-            }
-            if(sam_read1(fp, header, record2) <= 0) {
-                throw std::runtime_error("Error running tests");
-            }
-            hts_close(fp);
-        }
-
-        static void TearDownTestCase() {
-            bam_destroy1(record);
-            bam_destroy1(record2);
-            bam_hdr_destroy(header);
-        }
+class TestUtility : public TestWithBamRecord {
 };
-
-bam1_t* TestUtility::record = NULL;
-bam1_t* TestUtility::record2 = NULL;
-bam_hdr_t* TestUtility::header = NULL;
 
 TEST_F(TestUtility, cigar_right_offset_from_bam) {
     //21M1I65M64S
