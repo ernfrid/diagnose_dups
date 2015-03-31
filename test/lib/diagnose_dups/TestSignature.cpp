@@ -1,15 +1,18 @@
 #include "diagnose_dups/Signature.hpp"
-#include "TestData.hpp"
+#include "testing/TestBamRecords.hpp"
 
-#include <sam.h>
 #include <gtest/gtest.h>
 
-#include <stdexcept>
-#include <iostream>
-#include <stdint.h>
-
 class TestSignature : public ::testing::Test {
+    public:
+        bam1_t *record;
+        bam1_t *record2;
+        TestBamRecords records;
 
+        TestSignature()  {
+            record = records.record;
+            record2 = records.record2;
+        }
 };
 
 /*
