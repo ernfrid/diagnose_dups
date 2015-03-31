@@ -29,6 +29,15 @@ TEST_F(TestSignature, _calculate_position) {
     ASSERT_EQ(16302, test_sig2._calculate_position(record2));
 }
 
+TEST_F(TestSignature, _calculate_mate_position) {
+    Signature test_sig(record);
+    //NOTE the coordinates in the Signature are 0-based so that's why they're different
+    ASSERT_EQ(10094, test_sig._calculate_mate_position(record));
+
+    Signature test_sig2(record2);
+    ASSERT_EQ(15728, test_sig2._calculate_mate_position(record2));
+}
+
 TEST_F(TestSignature, is_equal) {
     Signature test_sig;
     Signature test_sig2;
