@@ -9,6 +9,14 @@
 
 using namespace std;
 
+/* XXX Reevaluate this at a later time
+ * 1) Is this appropriate as a base class or does it make more sense to be present in composition
+ * 2) As a base class with static members, are we re-initializing those on every construction? 
+ *    The answer should be yes and that seems bad.
+ * FIXME Due to the above, likely want to pull this into its own class and then have interested 
+ * tests use them as static variables that get initialized
+ */
+
 class TestWithBamRecord : public ::testing::Test {
     public:
         static bam1_t *record;
