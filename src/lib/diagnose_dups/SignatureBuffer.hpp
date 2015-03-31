@@ -22,13 +22,15 @@ class SignatureBuffer {
         void add(bam1_t const* record) {
             Signature sig(record);//TODO this might throw
             Read read;
-            parse_read(record, read);//TODO this might throw?
-            process(sig);
-            buffer_[sig].push_back(read);
+            if (!sig.is_for_rightmost_read()) {
+                parse_read(record, read);//TODO this might throw?
+                process(sig);
+                buffer_[sig].push_back(read);
+            }
         }
 
         void process(Signature const& last_sig) {
-            if(buffer_.empty()) {
+            if (buffer_.empty()) {
                 return;
             }
             SigReadIter i = buffer_.begin();

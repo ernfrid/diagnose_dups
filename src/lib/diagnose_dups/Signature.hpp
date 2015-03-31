@@ -31,6 +31,15 @@ struct Signature {
     int32_t _calculate_position(bam1_t const* record);
     int32_t _calculate_mate_position(bam1_t const* record);
 
+    //XXX If the two reads have the same orientation and position
+    //then this could be invalid e.g. pass both through or pass only one through
+    //Since we are selecting for proper pairs elsewhere
+    //I think this will be ok as is
+    bool is_for_rightmost_read() {
+        return(tid > mtid || (tid == mtid && mpos > pos));
+    }
+
+
     friend bool operator==(Signature const& lhs, Signature const& rhs) {
         return lhs.tid == rhs.tid
             && lhs.mtid == rhs.mtid
