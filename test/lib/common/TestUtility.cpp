@@ -1,6 +1,6 @@
 #include "common/Utility.hpp"
 #include "TestData.hpp"
-#include "testing/TestWithBamRecord.hpp"
+#include "testing/TestBamRecords.hpp"
 
 #include <boost/timer/timer.hpp>
 
@@ -11,7 +11,16 @@
 
 using namespace cigar; //for testing cigar parsing functions
 
-class TestUtility : public TestWithBamRecord {
+class TestUtility : public ::testing::Test {
+    public:
+        bam1_t *record;
+        bam1_t *record2;
+        TestBamRecords records;
+
+        TestUtility()  {
+            record = records.record;
+            record2 = records.record2;
+        }
 };
 
 TEST_F(TestUtility, cigar_right_offset_from_bam) {

@@ -1,9 +1,18 @@
 #include "diagnose_dups/Read.hpp"
-#include "testing/TestWithBamRecord.hpp"
+#include "testing/TestBamRecords.hpp"
 
 #include <gtest/gtest.h>
 
-class TestRead : public TestWithBamRecord {
+class TestRead : public ::testing::Test {
+    public:
+        bam1_t *record;
+        bam1_t *record2;
+        TestBamRecords records;
+
+        TestRead()  {
+            record = records.record;
+            record2 = records.record2;
+        }
 };
 
 TEST_F(TestRead, construction_from_bam_record) {
