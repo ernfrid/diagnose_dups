@@ -6,13 +6,13 @@
     { "intertile_distance": 9, "count": 1 },
     { "intertile_distance": 12, "count": 1 },
     { "intertile_distance": 13, "count": 1 },
-    { "intertile_distance": 19, "count": 3 },
+    { "intertile_distance": 19, "count": 2 },
     { "intertile_distance": 27, "count": 1 }
  ],
  "num_times_duplicated": [
     { "num_duplicates": 2, "count": 2 },
     { "num_duplicates": 3, "count": 1 },
-    { "num_duplicates": 4, "count": 1 },
+    { "num_duplicates": 4, "count": 1 }
  ],
  "insert_size": [
     { "insert_size": 0, "unique_count": 0, "duplicate_count": 2 },
