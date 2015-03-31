@@ -28,6 +28,8 @@ struct Signature {
     Signature(bam1_t const* record);
 
     void parse(bam1_t const* record);
+    int32_t _calculate_position(bam1_t const* record);
+    int32_t _calculate_mate_position(bam1_t const* record);
 
     friend bool operator==(Signature const& lhs, Signature const& rhs) {
         return lhs.tid == rhs.tid
@@ -80,7 +82,4 @@ struct Signature {
         return seed;
     }
 
-private:
-    int32_t _calculate_position(bam1_t const* record);
-    int32_t _calculate_mate_position(bam1_t const* record);
 };

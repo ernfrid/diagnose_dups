@@ -11,7 +11,7 @@ class TestSignature : public ::testing::Test {
 
         TestSignature()  {
             record = records.record;
-            record2 = records.record2;
+            record2 = records.record3;
         }
 };
 
@@ -19,6 +19,15 @@ class TestSignature : public ::testing::Test {
 TEST_F(TestSignature, constructor) {
 
 }*/
+
+TEST_F(TestSignature, _calculate_position) {
+    Signature test_sig(record);
+    //NOTE the coordinates in the Signature are 0-based so that's why they're different
+    ASSERT_EQ(10030, test_sig._calculate_position(record));
+
+    Signature test_sig2(record2);
+    ASSERT_EQ(16302, test_sig2._calculate_position(record2));
+}
 
 TEST_F(TestSignature, is_equal) {
     Signature test_sig;
