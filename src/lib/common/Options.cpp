@@ -18,12 +18,12 @@ Options::Options(int argc, char** argv) {
                 options(desc).positional(p).run(), vm);
         po::notify(vm);
 
-        if(vm.count("help")) {
+        if (vm.count("help")) {
             cerr << desc << "\n";
             exit(0);
         }
 
-        if(vm.count("version")) {
+        if (vm.count("version")) {
             cerr << "version: " << __g_prog_version
                 << " (commit " << __g_commit_hash << ")\n";
             exit(0);
