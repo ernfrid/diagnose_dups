@@ -19,7 +19,7 @@ namespace cigar {
     int opcode_for_char(char code) {
         //stupid, but easy
         //"MIDNSHP=XB"
-        switch(code) {
+        switch (code) {
             case 'M':
                 return 0;
             case 'I':
@@ -66,7 +66,7 @@ namespace cigar {
             // qi numeric parsing is much faster than strtoul
             // it takes beg by reference and moves it to the first non-numeric
             // character
-            if(UNLIKELY(!auto_parse(beg, end, oplen) || !valid_cigar_len(oplen))) {
+            if (UNLIKELY(!auto_parse(beg, end, oplen) || !valid_cigar_len(oplen))) {
                 // do you want to get mad if this isn't a number?
                 throw std::runtime_error(str(format(
                     "Error parsing cigar string %1%: expected number at position %2%"
@@ -75,7 +75,7 @@ namespace cigar {
 
             int op = opcode_for_char(*beg);
 
-            if(UNLIKELY(op < 0)) {
+            if (UNLIKELY(op < 0)) {
                 throw std::runtime_error(str(format(
                     "Error parsing cigar string %1%: invalid cigar op char at position %2%"
                     ) % cigar_string % (beg - cigar_string)));
@@ -93,7 +93,7 @@ namespace cigar {
 
     uint32_t right_offset_add(int32_t current, uint32_t cigar) {
         uint32_t op = bam_cigar_op(cigar);
-        if(bam_cigar_type(op) & 2 || op == BAM_CSOFT_CLIP || op == BAM_CHARD_CLIP) {
+        if (bam_cigar_type(op) & 2 || op == BAM_CSOFT_CLIP || op == BAM_CHARD_CLIP) {
             current += bam_cigar_oplen(cigar);
         }
         return current;
@@ -120,7 +120,7 @@ namespace cigar {
 
     int32_t left_offset_sub(int32_t current, uint32_t cigar) {
         uint32_t op = bam_cigar_op(cigar);
-        if(op == BAM_CSOFT_CLIP || op == BAM_CHARD_CLIP) {
+        if (op == BAM_CSOFT_CLIP || op == BAM_CHARD_CLIP) {
             current -= bam_cigar_oplen(cigar);
         }
         return current;
@@ -133,7 +133,7 @@ namespace cigar {
     }
 
     int32_t calculate_right_offset(bam1_t const* record) {
-        if(record->core.n_cigar) {
+        if (record->core.n_cigar) {
             uint32_t *cigar = bam_get_cigar(record);
             return calculate_right_offset(cigar, cigar + record->core.n_cigar);
         }
@@ -148,7 +148,7 @@ namespace cigar {
     }
 
     int32_t calculate_left_offset(bam1_t const* record) {
-        if(record->core.n_cigar) {
+        if (record->core.n_cigar) {
             uint32_t *cigar = bam_get_cigar(record);
             return calculate_left_offset(cigar, cigar + record->core.n_cigar);
         }
