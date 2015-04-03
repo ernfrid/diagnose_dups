@@ -19,9 +19,9 @@ TEST_F(TestRead, construction_from_bam_record) {
     Read test_read;
     ASSERT_TRUE(parse_read(record, test_read));
     ASSERT_EQ(65, test_read.insert_size);
-    ASSERT_EQ("H25NTCCXX", test_read.flowcell);
-    ASSERT_EQ(6, test_read.lane);
-    ASSERT_EQ(1101, test_read.tile);
+    ASSERT_EQ("H25NTCCXX", test_read.tile.flowcell);
+    ASSERT_EQ(6, test_read.tile.lane);
+    ASSERT_EQ(1101, test_read.tile.id);
     ASSERT_EQ(10206, test_read.x);
     ASSERT_EQ(3454, test_read.y);
 }
@@ -44,26 +44,26 @@ TEST_F(TestRead, is_on_same_tile) {
     //FIXME test all possible configurations of flow cell, lane, tile to make
     //sure this is working
     Read test_read;
-    test_read.flowcell = "Saint Louis";
-    test_read.lane = 1;
-    test_read.tile = 1011;
+    test_read.tile.flowcell = "Saint Louis";
+    test_read.tile.lane = 1;
+    test_read.tile.id = 1011;
 
     Read other_test_read;
-    other_test_read.flowcell = "Saint Louis";
-    other_test_read.lane = 1;
-    other_test_read.tile = 1011;
+    other_test_read.tile.flowcell = "Saint Louis";
+    other_test_read.tile.lane = 1;
+    other_test_read.tile.id = 1011;
 
     ASSERT_TRUE(is_on_same_tile(test_read, other_test_read));
 
-    other_test_read.flowcell = "Indianapolis";
+    other_test_read.tile.flowcell = "Indianapolis";
     ASSERT_FALSE(is_on_same_tile(test_read, other_test_read));
 
-    other_test_read.flowcell = "Saint Louis";
-    other_test_read.lane = 6;
+    other_test_read.tile.flowcell = "Saint Louis";
+    other_test_read.tile.lane = 6;
     ASSERT_FALSE(is_on_same_tile(test_read, other_test_read));
 
 
-    other_test_read.lane = 1;
-    other_test_read.tile = 1012;
+    other_test_read.tile.lane = 1;
+    other_test_read.tile.id = 1012;
     ASSERT_FALSE(is_on_same_tile(test_read, other_test_read));
 }

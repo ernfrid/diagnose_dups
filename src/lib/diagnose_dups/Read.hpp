@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Tile.hpp"
+
 #include <sam.h> //from htslib
 
 #include <cassert>
@@ -10,9 +12,7 @@
 
 struct Read {
     int32_t insert_size;
-    std::string flowcell;
-    int lane;
-    int tile;
+    Tile tile;
     int x;
     int y;
 };
@@ -21,10 +21,7 @@ bool parse_read(bam1_t const* record, Read& read);
 
 inline
 bool is_on_same_tile(Read const& x, Read const& y) {
-    return
-           x.flowcell == y.flowcell
-        && x.lane == y.lane
-        && x.tile == y.tile;
+    return x.tile == y.tile;
 }
 
 inline

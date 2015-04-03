@@ -15,13 +15,13 @@ bool parse_read(bam1_t const* record, Read& read) {
     if (tok.skip(2) != 2)
         return false;
 
-    if (!tok.extract(read.flowcell))
+    if (!tok.extract(read.tile.flowcell))
         return false;
 
-    if (!tok.extract(read.lane))
+    if (!tok.extract(read.tile.lane))
         return false;
 
-    if (!tok.extract(read.tile))
+    if (!tok.extract(read.tile.id))
         return false;
 
     if (!tok.extract(read.x))
