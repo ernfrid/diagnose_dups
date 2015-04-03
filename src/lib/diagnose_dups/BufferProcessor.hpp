@@ -78,7 +78,7 @@ struct BufferProcessor {
         os << " \"distance\": [\n";
         for (HVec::const_iterator i = dist.begin(); i != dist.end(); ++i) {
             os << "    { "
-               << "\"intertile_distance\": " << i->name
+               << "\"intratile_distance\": " << i->name
                << ", "
                << "\"count\": " << i->count
                << " }";
