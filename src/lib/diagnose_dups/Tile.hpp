@@ -21,6 +21,25 @@ struct Tile {
            && lhs.id == rhs.id;
    }
 
+   friend bool operator<(Tile const& lhs, Tile const&rhs) {
+       if (lhs.flowcell < rhs.flowcell) {
+           return true;
+       }
+       else {
+           if (lhs.flowcell == rhs.flowcell) {
+               if (lhs.lane < rhs.lane) {
+                   return true;
+               }
+               else {
+                   if (lhs.lane == rhs.lane) {
+                       return lhs.id < rhs.id;
+                   }
+               }
+           }
+       }
+       return false;
+   }
+
    friend std::size_t hash_value(Tile const& tile) {
        std::size_t seed = boost::hash_value(tile.flowcell);
        boost::hash_combine(seed, tile.lane);

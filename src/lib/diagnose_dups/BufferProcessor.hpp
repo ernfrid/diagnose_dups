@@ -32,6 +32,8 @@ struct BufferProcessor {
         for (std::size_t i = 0; i < n; ++i) {
             ++dup_insert_sizes[abs(reads[i].insert_size)];
             nondup_insert_sizes[abs(reads[i].insert_size)] += 0;
+            ++tile_duplicates[reads[i].tile];
+            tile_unique[reads[i].tile] += 0;
             for (std::size_t j = i + 1; j < n; ++j) {
                 if (is_on_same_tile(reads[i], reads[j])) {
                     uint64_t flow_cell_distance = euclidean_distance(reads[i], reads[j]);
@@ -51,6 +53,9 @@ struct BufferProcessor {
         else {
             dup_insert_sizes[abs(reads[0].insert_size)] += 0;
             ++nondup_insert_sizes[abs(reads[0].insert_size)];
+
+            ++tile_unique[reads[0].tile];
+            tile_duplicates[reads[0].tile] += 0;
         }
     }
 
@@ -114,6 +119,28 @@ struct BufferProcessor {
                 os << ",\n";
             }
         }
+        os << "\n ],\n";
+
+        typedef Histogram<Tile>::VectorType TVec;
+        os << " \"per_tile_stats\": [\n";
+        TVec tiles = tile_unique.as_sorted_vector();
+        for (TVec::const_iterator i = tiles.begin(); i != tiles.end(); ++i) {
+            os << "    { "
+               << "\"flowcell\": \"" << i->name.flowcell << "\""
+               << ", "
+               << "\"lane\": " << i->name.lane 
+               << ", "
+               << "\"tile\": " << i->name.id 
+               << ", "
+               << "\"unique_count\": " << i->count
+               << ", "
+               << "\"duplicate_count\": " << tile_duplicates[i->name]
+               << " }";
+            if (i + 1 != tiles.end()) {
+                os << ",\n";
+            }
+        }
+        
         os << "\n ]\n}\n";
 
         std::cerr << total_dups << " duplicates found out of " << total_fragments << ".\n";
