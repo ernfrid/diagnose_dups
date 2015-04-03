@@ -1,6 +1,8 @@
 #pragma once
 
 #include "common/Histogram.hpp"
+#include "Read.hpp"
+#include "Tile.hpp"
 
 #include <cstddef>
 #include <iostream>
@@ -14,14 +16,15 @@ struct BufferProcessor {
     Histogram<uint64_t> nondup_insert_sizes;
     Histogram<uint64_t> distances;
     Histogram<uint64_t> number_of_dups;
+    Histogram<Tile> tile_duplicates;
+    Histogram<Tile> tile_unique;
+
     std::size_t total_dups;
     std::size_t total_fragments;
-    std::size_t total_intertile;
 
     BufferProcessor()
         : total_dups(0)
         , total_fragments(0)
-        , total_intertile(0)
     {}
 
     void update_distances(ReadVector const& reads) {
@@ -33,9 +36,6 @@ struct BufferProcessor {
                 if (is_on_same_tile(reads[i], reads[j])) {
                     uint64_t flow_cell_distance = euclidean_distance(reads[i], reads[j]);
                     ++distances[flow_cell_distance];
-                }
-                else {
-                    ++total_intertile;
                 }
             }
         }
@@ -70,8 +70,6 @@ struct BufferProcessor {
            << "\"total_fragments\": " << total_fragments
            << ", "
            << "\"total_duplicate_fragments\": " << total_dups
-           << ", "
-           << "\"total_intertile_duplicates\": " << total_intertile
            << " }\n ],\n";
         typedef Histogram<uint64_t>::VectorType HVec;
         HVec dist = distances.as_sorted_vector();
