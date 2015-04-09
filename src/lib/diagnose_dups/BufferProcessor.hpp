@@ -145,9 +145,13 @@ struct BufferProcessor {
             os << "    { "
                << "\"flowcell\": \"" << i->name.flowcell << "\""
                << ", "
-               << "\"lane\": " << i->name.lane 
+               << "\"lane\": " << i->name.lane
                << ", "
-               << "\"tile\": " << i->name.id 
+               << "\"tile\": " << i->name.id
+               << ", "
+               << "\"subtile_x\": " << i->name.subtile_x
+               << ", "
+               << "\"subtile_y\": " << i->name.subtile_y
                << ", "
                << "\"unique_count\": " << i->count
                << ", "

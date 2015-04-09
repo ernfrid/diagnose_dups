@@ -31,5 +31,9 @@ bool parse_read(bam1_t const* record, Read& read) {
     if (!tok.extract(read.y))
         return false;
 
+    //generate subtiles
+    read.tile.subtile_x = read.x / 1000;
+    read.tile.subtile_y = read.y / 1000;
+
     return true;
 }
