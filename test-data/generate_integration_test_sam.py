@@ -13,9 +13,9 @@ sam_lines = (
         #there is one duplicated fragment and it is duplicated 4 times
         #3 paired comparisons are intertile
         "machine:1:flowcell:1:1102:1:1	163	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M",
-        "machine:1:flowcell:1:1101:1:1	99	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M",
-        "machine:1:flowcell:1:1101:1:10	99	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M", # distance should be 9
-        "machine:1:flowcell:1:1101:1:10	419	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M", # this shouldn't be counted it isn't primary
+        "machine:1:flowcell:1:1101:1:2001	99	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M",
+        "machine:1:flowcell:1:1101:1:2010	99	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M", # distance should be 9
+        "machine:1:flowcell:1:1101:1:2010	419	1	15729	60	5M	=	16153	575	CAGGG	AAFFF	MC:Z:5M", # this shouldn't be counted it isn't primary
         "machine:1:flowcell:1:1102:1:20	99	1	15730	60	4M	=	16153	575	AGGG	AFFF	MC:Z:5M", # isn't a dup
 
         "machine:1:flowcell:1:1102:1:13	99	1	15731	60	2S3M	=	16153	575	CAGGG	AAFFF	MC:Z:5M", # distance should be 12, this IS a dup
@@ -25,9 +25,9 @@ sam_lines = (
         "machine:1:flowcell:2:1102:1:1	99	1	15753	60	5M	=	16153	475	CTTGC	AAFFF	MC:Z:5M",
 
         #below are the mates from the first block. Ideally they are not counted since that would double count fragments
-        "machine:1:flowcell:1:1101:1:1	147	1	16153	60	5M	=	15729	-575	GTGCA	AAFFF	MC:Z:5M",
+        "machine:1:flowcell:1:1101:1:2001	147	1	16153	60	5M	=	15729	-575	GTGCA	AAFFF	MC:Z:5M",
         "machine:1:flowcell:1:1102:1:1	83	1	16153	60	5M	=	15729	-575	GTGCA	AAFFF	MC:Z:5M",
-        "machine:1:flowcell:1:1101:1:10	147	1	16153	60	5M	=	15729	-575	GTGCA	AAFFF	MC:Z:5M", # distance should be 9
+        "machine:1:flowcell:1:1101:1:2010	147	1	16153	60	5M	=	15729	-575	GTGCA	AAFFF	MC:Z:5M", # distance should be 9
         "machine:1:flowcell:1:1102:1:20	147	1	16153	60	5M	=	15730	-575	GTGCA	AAFFF	MC:Z:4M",
         "machine:1:flowcell:1:1102:1:13	147	1	16153	60	5M	=	15731	-575	GTGCA	AAFFF	MC:Z:2S3M",
 
