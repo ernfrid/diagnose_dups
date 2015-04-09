@@ -21,10 +21,14 @@ struct BufferProcessor {
 
     std::size_t total_dups;
     std::size_t total_fragments;
+    std::size_t dup_on_same_strand;
+    std::size_t dup_on_different_strand;
 
     BufferProcessor()
         : total_dups(0)
         , total_fragments(0)
+        , dup_on_same_strand(0)
+        , dup_on_different_strand(0)
     {}
 
     void update_distances(ReadVector const& reads) {
@@ -38,6 +42,15 @@ struct BufferProcessor {
                 if (is_on_same_tile(reads[i], reads[j])) {
                     uint64_t flow_cell_distance = euclidean_distance(reads[i], reads[j]);
                     ++distances[flow_cell_distance];
+                }
+                //Only do the below for paired duplicates. If more than 2 copies, this inflates with pairwise comparisons
+                if (n == 2) {
+                    if (is_on_same_strand(reads[i], reads[j])) {
+                        ++dup_on_same_strand;
+                    }
+                    else {
+                        ++dup_on_different_strand;
+                    }
                 }
             }
         }
@@ -75,6 +88,10 @@ struct BufferProcessor {
            << "\"total_fragments\": " << total_fragments
            << ", "
            << "\"total_duplicate_fragments\": " << total_dups
+           << ", "
+           << "\"duplicate_on_same_strand(pairs)\": " << dup_on_same_strand
+           << ", "
+           << "\"duplicate_on_different_strand(pairs)\": " << dup_on_different_strand
            << " }\n ],\n";
         typedef Histogram<uint64_t>::VectorType HVec;
         HVec dist = distances.as_sorted_vector();

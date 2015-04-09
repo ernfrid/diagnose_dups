@@ -15,6 +15,7 @@ struct Read {
     Tile tile;
     int x;
     int y;
+    bool is_read1;
 };
 
 bool parse_read(bam1_t const* record, Read& read);
@@ -22,6 +23,11 @@ bool parse_read(bam1_t const* record, Read& read);
 inline
 bool is_on_same_tile(Read const& x, Read const& y) {
     return x.tile == y.tile;
+}
+
+inline
+bool is_on_same_strand(Read const& lhs, Read const& rhs) {
+    return lhs.is_read1 == rhs.is_read1;
 }
 
 inline

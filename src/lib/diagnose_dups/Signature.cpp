@@ -12,7 +12,6 @@ void Signature::parse(bam1_t const* record) {
     mreverse = bam_is_mrev(record);
     pos = _calculate_position(record);
     mpos = _calculate_mate_position(record);
-    is_read1 = record->core.flag & BAM_FREAD1; //BAM_FREAD2 will not be examined explicitly
 }
 
 int32_t Signature::_calculate_position(bam1_t const* record) {

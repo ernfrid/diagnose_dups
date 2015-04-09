@@ -15,7 +15,6 @@ struct Signature {
     int32_t mpos;
     bool reverse;
     bool mreverse;
-    bool is_read1;
 
     Signature()
         : tid(-1)
@@ -24,7 +23,6 @@ struct Signature {
         , mpos(-1)
         , reverse(false)
         , mreverse(false)
-        , is_read1(false)
     {}
 
     Signature(bam1_t const* record);

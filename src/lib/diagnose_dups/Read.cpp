@@ -6,6 +6,7 @@
 
 bool parse_read(bam1_t const* record, Read& read) {
     read.insert_size = record->core.isize;
+    read.is_read1 = record->core.flag & BAM_FREAD1; //BAM_FREAD2 will not be examined explicitly
 
     char const* name = bam_get_qname(record);
 
