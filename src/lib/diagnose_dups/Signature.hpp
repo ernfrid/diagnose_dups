@@ -36,7 +36,7 @@ struct Signature {
     //Since we are selecting for proper pairs elsewhere
     //I think this will be ok as is
     bool is_for_rightmost_read() {
-        return(tid > mtid || (tid == mtid && mpos > pos));
+        return(tid > mtid || (tid == mtid && mpos < pos));
     }
 
 
