@@ -17,7 +17,7 @@ class TestRead : public ::testing::Test {
 
 TEST_F(TestRead, construction_from_bam_record) {
     Read test_read;
-    ASSERT_TRUE(parse_read(record, test_read));
+    ASSERT_NO_THROW(parse_read(record, test_read));
     ASSERT_EQ(65, test_read.insert_size);
     ASSERT_EQ("H25NTCCXX", test_read.tile.flowcell);
     ASSERT_EQ(6, test_read.tile.lane);

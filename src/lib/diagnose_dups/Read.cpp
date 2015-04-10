@@ -2,9 +2,14 @@
 
 #include "common/Parse.hpp"
 
-#include <algorithm>
+#include <boost/format.hpp>
 
-bool parse_read(bam1_t const* record, Read& read) {
+#include <algorithm>
+#include <stdexcept>
+
+using boost::format;
+
+void parse_read(bam1_t const* record, Read& read) {
     read.insert_size = record->core.isize;
     read.is_read1 = record->core.flag & BAM_FREAD1; //BAM_FREAD2 will not be examined explicitly
 
@@ -14,26 +19,37 @@ bool parse_read(bam1_t const* record, Read& read) {
     SimpleTokenizer tok(name, name + record->core.l_qname - 1, ':');
 
     if (tok.skip(2) != 2)
-        return false;
+        throw std::runtime_error(str(format(
+                        "Error parsing read name %1%"
+                        ) % name));
 
     if (!tok.extract(read.tile.flowcell))
-        return false;
+        throw std::runtime_error(str(format(
+                        "Error parsing read name %1%"
+                        ) % name));
 
     if (!tok.extract(read.tile.lane))
-        return false;
+        throw std::runtime_error(str(format(
+                        "Error parsing read name %1%"
+                        ) % name));
 
     if (!tok.extract(read.tile.id))
-        return false;
+        throw std::runtime_error(str(format(
+                        "Error parsing read name %1%"
+                        ) % name));
 
     if (!tok.extract(read.x))
-        return false;
+        throw std::runtime_error(str(format(
+                        "Error parsing read name %1%"
+                        ) % name));
 
     if (!tok.extract(read.y))
-        return false;
+        throw std::runtime_error(str(format(
+                        "Error parsing read name %1%"
+                        ) % name));
 
     //generate subtiles
     read.tile.subtile_x = read.x / 1000;
     read.tile.subtile_y = read.y / 1000;
 
-    return true;
 }

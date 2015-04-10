@@ -18,7 +18,7 @@ struct Read {
     bool is_read1;
 };
 
-bool parse_read(bam1_t const* record, Read& read);
+void parse_read(bam1_t const* record, Read& read);
 
 inline
 bool is_on_same_tile(Read const& x, Read const& y) {
