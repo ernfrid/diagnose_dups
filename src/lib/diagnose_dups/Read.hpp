@@ -22,7 +22,7 @@ void parse_read(bam1_t const* record, Read& read);
 
 inline
 bool is_on_same_tile(Read const& x, Read const& y) {
-    return x.tile == y.tile;
+    return same_tile(x.tile, y.tile);
 }
 
 inline

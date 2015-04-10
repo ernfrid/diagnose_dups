@@ -20,11 +20,15 @@ struct Tile {
     {}
 
    friend bool operator==(Tile const& lhs, Tile const& rhs) {
-       return lhs.flowcell == rhs.flowcell
-           && lhs.lane == rhs.lane
-           && lhs.id == rhs.id
+       return same_tile(lhs, rhs)
            && lhs.subtile_x == rhs.subtile_x
            && lhs.subtile_y == rhs.subtile_y;
+   }
+
+   friend bool same_tile(Tile const& lhs, Tile const& rhs) {
+       return lhs.flowcell == rhs.flowcell
+           && lhs.lane == rhs.lane
+           && lhs.id == rhs.id;
    }
 
    friend bool operator<(Tile const& lhs, Tile const&rhs) {
@@ -66,4 +70,5 @@ struct Tile {
        boost::hash_combine(seed, tile.subtile_y);
        return seed;
    }
+
 };
