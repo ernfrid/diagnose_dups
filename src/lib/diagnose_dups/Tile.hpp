@@ -46,12 +46,14 @@ struct Tile {
                            return true;
                        }
                        else {
-                           if (lhs.subtile_x < rhs.subtile_x) {
-                               return true;
-                           }
-                           else {
-                               if (lhs.subtile_x == rhs.subtile_x) {
-                                   return lhs.subtile_y < rhs.subtile_y;
+                           if (lhs.id == rhs.id) {
+                               if (lhs.subtile_x < rhs.subtile_x) {
+                                   return true;
+                               }
+                               else {
+                                   if (lhs.subtile_x == rhs.subtile_x) {
+                                       return lhs.subtile_y < rhs.subtile_y;
+                                   }
                                }
                            }
                        }
