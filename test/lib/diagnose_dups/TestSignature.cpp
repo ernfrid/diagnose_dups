@@ -15,11 +15,6 @@ class TestSignature : public ::testing::Test {
         }
 };
 
-/*
-TEST_F(TestSignature, constructor) {
-
-}*/
-
 TEST_F(TestSignature, _calculate_position) {
     Signature test_sig(record);
     //NOTE the coordinates in the Signature are 0-based so that's why they're different
@@ -148,5 +143,24 @@ TEST_F(TestSignature, less) {
     test_sig2.mreverse = true;
     ASSERT_TRUE(test_sig < test_sig2);
     ASSERT_FALSE(test_sig2 < test_sig);
+}
+
+TEST_F(TestSignature, is_for_rightmost_read) {
+    Signature test_sig;
+    test_sig.tid = 1;
+    test_sig.pos = 1001;
+    test_sig.mpos = 1432;
+    test_sig.mtid = 1;
+    test_sig.reverse = false;
+    test_sig.mreverse = true;
+    
+    ASSERT_FALSE(test_sig.is_for_rightmost_read());
+    test_sig.pos = 1500;
+
+    ASSERT_TRUE(test_sig.is_for_rightmost_read());
+
+    test_sig.pos = 1001;
+    test_sig.tid = 20;
+    ASSERT_TRUE(test_sig.is_for_rightmost_read());
 }
 
