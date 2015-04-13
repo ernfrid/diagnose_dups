@@ -18,7 +18,7 @@ install:
 before_script:
     - wget https://github.com/samtools/htslib/archive/1.2.1.tar.gz -O /tmp/htslib-1.2.1.tar.gz
     - tar -xvf /tmp/htslib-1.2.1.tar.gz
-    - cd /tmp/htslib-1.2.1/ && ./configure && make && make install
+    - cd htslib-1.2.1/ && ./configure && make && make install
     - cd $TRAVIS_BUILD_DIR
     - mkdir build
     - cd build
