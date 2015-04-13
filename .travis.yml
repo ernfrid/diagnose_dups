@@ -1,0 +1,33 @@
+language: cpp
+
+compiler:
+    - gcc
+
+notifications:
+    email:
+        on_failure: always
+        on_success: change
+
+before_install:
+    - sudo apt-get update
+    - sudo apt-get install cmake
+
+install:
+    - sudo apt-get install libboost1.48-dev-all zlib1g-dev
+
+before_script:
+    - wget https://github.com/samtools/htslib/archive/1.2.1.tar.gz -O /tmp/htslib-1.2.1.tar.gz
+    - tar -xvf /tmp/htslib-1.2.1.tar.gz
+    - cd /tmp/htslib-1.2.1/ && make && make install
+    - cd $TRAVIS_BUILD_DIR
+    - mkdir build
+    - cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=debug
+    - make VERBOSE=1
+
+script:
+    - ctest -V
+
+branches:
+    only:
+        - master
