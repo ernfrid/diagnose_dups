@@ -31,7 +31,7 @@ script:
 
 after_success:
     # as described at: https://github.com/eddyxu/cpp-coveralls
-    - coveralls --exclude-pattern test --exclude-pattern usr --gcov-options '\-lp' -r .. 
+    - coveralls --exclude test --exclude cmake --exclude build --gcov-options '\-lp' -r .. 
 branches:
     only:
         - master
