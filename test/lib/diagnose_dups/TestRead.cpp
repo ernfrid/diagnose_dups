@@ -67,3 +67,16 @@ TEST_F(TestRead, is_on_same_tile) {
     other_test_read.tile.id = 1012;
     ASSERT_FALSE(is_on_same_tile(test_read, other_test_read));
 }
+
+TEST_F(TestRead, is_on_same_strand) {
+    Read test_read;
+    parse_read(record, test_read);
+
+    Read test_read2;
+    parse_read(record, test_read2);
+
+    ASSERT_TRUE(is_on_same_strand(test_read, test_read2));
+    
+    parse_read(records.record3, test_read2);    
+    ASSERT_FALSE(is_on_same_strand(test_read, test_read2));
+}
