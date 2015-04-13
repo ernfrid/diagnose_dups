@@ -11,6 +11,7 @@ notifications:
 before_install:
     - sudo apt-get update
     - sudo apt-get install cmake
+    - sudo pip install cpp-coveralls
 
 install:
     - sudo apt-get install libboost1.48-all-dev zlib1g-dev
@@ -22,12 +23,15 @@ before_script:
     - cd $TRAVIS_BUILD_DIR
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=debug
+    - cmake .. -DCMAKE_BUILD_TYPE=coverage
     - make VERBOSE=1
 
 script:
     - ctest -V
 
+after_success:
+    # as described at: https://github.com/eddyxu/cpp-coveralls
+    - coveralls --exclude tests --gcov-options '\-lp'
 branches:
     only:
         - master
