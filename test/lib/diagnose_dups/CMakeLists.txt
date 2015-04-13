@@ -9,4 +9,5 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_unit_tests(TestDiagnoseDupsLib
     TestRead.cpp
     TestSignature.cpp
+    TestTile.cpp
     )
