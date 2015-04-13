@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/genome/diagnose_dups.svg?branch=master)](https://travis-ci.org/genome/diagnose_dups)
+[![Coverage Status](https://coveralls.io/repos/genome/diagnose_dups/badge.svg)](https://coveralls.io/r/genome/diagnose_dups)
 
 # Purpose
 The purpose of this program is due examine characteristics of duplicate reads within a coordinate sorted BAM file
