@@ -13,12 +13,12 @@ before_install:
     - sudo apt-get install cmake
 
 install:
-    - sudo apt-get install libboost-dev-all zlib1g-dev
+    - sudo apt-get install libboost-all-dev zlib1g-dev
 
 before_script:
     - wget https://github.com/samtools/htslib/archive/1.2.1.tar.gz -O /tmp/htslib-1.2.1.tar.gz
     - tar -xvf /tmp/htslib-1.2.1.tar.gz
-    - cd /tmp/htslib-1.2.1/ && make && make install
+    - cd /tmp/htslib-1.2.1/ && ./configure && make && make install
     - cd $TRAVIS_BUILD_DIR
     - mkdir build
     - cd build
