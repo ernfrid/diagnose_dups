@@ -10,6 +10,7 @@ set(HTSLIB_SEARCH_DIRS
     $ENV{HTSLIB_ROOT}
     /gsc/pkg/bio/htslib
     /usr
+    /usr/local
 )
 message(STATUS "Searching for HTSLIB in ${HTSLIB_SEARCH_DIRS}")
 
