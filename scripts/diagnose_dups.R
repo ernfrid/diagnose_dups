@@ -39,8 +39,14 @@ for (fcid in unique(tile_stats$flowcell)) {
     x <- df[df$flowcell == fcid,]
     x$total <- x$unique_count + x$duplicate_count
     x$density <- x$total / max(x$total)
+    
+    x$graph_x <- x$subtile_x + (as.integer(x$swath) -1 ) * max(x$subtile_x)
+    x$graph_y <- x$subtile_y + (as.integer(x$tile_id) - 1) * max(x$subtile_y) #+ (as.integer(x$tile_id) - 1) * 2) NOTE This didn't work as intended. doesn't look like separation, more like low values.
 
-    p <- ggplot(x, aes(swath, tile_id, fill=total)) +
+    # alternatively could try to get the following labeled better:
+    # p <- ggplot(df, aes(subtile_x, subtile_y, fill=dup_frac)) + geom_tile() + facet_grid(side + tile_id ~ lane + swath, scales="free", space="free") + theme_bw() + scale_fill_gradient(low="#22FF00", high="#FF0000", name="Duplication") + opts(panel.margin = unit(0,"lines"))
+
+    p <- ggplot(x, aes(graph_x, graph_y, fill=total)) +
         geom_tile() +
         facet_grid(side ~ lane) +
         theme_bw() +
@@ -49,7 +55,7 @@ for (fcid in unique(tile_stats$flowcell)) {
         scale_fill_continuous(name="Read counts")
     print(p)
 
-    p <- ggplot(x, aes(swath, tile_id, fill=dup_frac)) +
+    p <- ggplot(x, aes(graph_x, graph_y, fill=dup_frac)) +
         geom_tile() +
         facet_grid(side ~ lane) +
         theme_bw() +
@@ -70,6 +76,7 @@ for (fcid in unique(tile_stats$flowcell)) {
 }
 
 dev.off()
+
 # calculate summary statistics and print out a line to stderr
 # generate a multi-page PDF of possible plots
 # plot insert size metrics
