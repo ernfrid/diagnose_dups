@@ -66,5 +66,8 @@ include_directories(${CMAKE_SOURCE_DIR}/test)
 enable_testing(true)
 add_projects(test/lib)
 
+# integration testing
+add_subdirectory(integration-test)
+
 ## Packaging
 include(PackageInfo.cmake)
