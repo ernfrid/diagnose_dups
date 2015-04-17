@@ -28,3 +28,30 @@ aggregate_summary <- function(...) {
     new_frame <- rbind.fill(...)
     ddply(new_frame, c("total_fragments", "total_duplicate_fragments", "`duplicate_on_same_strand(pairs)`", "`duplicate_on_different_strand(pairs)`"), summarise, total_fragments = sum(total_fragments), total_duplicate_fragments = sum(total_duplicate_fragments), `duplicate_on_same_strand(pairs)` = sum(`duplicate_on_same_strand(pairs)`), `duplicate_on_different_strand(pairs)` = sum(`duplicate_on_different_strand(pairs)`))
 }
+
+aggregate_distance <- function(...) {
+    new_frame <- rbind.fill(...)
+    ddply(new_frame, c("intratile_distance"), summarise, count = sum(count))
+}
+
+aggregate_times_duplicated <- function(...) {
+    new_frame <- rbind.fill(...)
+    ddply(new_frame, c("num_duplicates"), summarise, count = sum(count))
+}
+
+aggregate_insert_size <- function(...) {
+    new_frame <- rbind.fill(...)
+    ddply(new_frame, c("insert_size"), summarise, unique_count = sum(unique_count), duplicate_count = sum(duplicate_count))
+}
+
+aggregate_output <- function(...) {
+    json_data <- list(...)
+    aggregated_list <- list()
+    aggregated_list$summary <- aggregate_summary(lapply(json_data,"[[", "summary"))
+    aggregated_list$distance <- aggregate_distance(lapply(json_data, "[[", "distance"))
+    aggregated_list$num_times_duplicated <- aggregate_times_duplicated(lapply(json_data, "[[", "num_times_duplicated"))
+    aggregated_list$insert_size <- aggregate_insert_size(lapply(json_data,"[[", "insert_size"))
+    aggregated_list$per_tile_stats <- aggregate_location_data(lapply(json_data, "[[", "per_tile_stats"))
+    aggregated_list
+}
+
