@@ -18,3 +18,8 @@ parse_tiles <- function(tiles) {
 
     data.frame(side=side, swath=swath, tile_id=tile)
 }
+
+aggregate_location_data <- function(...) {
+    new_frame <- rbind.fill(...)
+    ddply(new_frame, c("flowcell", "lane", "tile", "subtile_x", "subtile_y"), summarise, unique_count = sum(unique_count), duplicate_count = sum(duplicate_count))
+}
