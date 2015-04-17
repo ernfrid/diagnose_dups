@@ -23,3 +23,8 @@ aggregate_location_data <- function(...) {
     new_frame <- rbind.fill(...)
     ddply(new_frame, c("flowcell", "lane", "tile", "subtile_x", "subtile_y"), summarise, unique_count = sum(unique_count), duplicate_count = sum(duplicate_count))
 }
+
+aggregate_summary <- function(...) {
+    new_frame <- rbind.fill(...)
+    ddply(new_frame, c("total_fragments", "total_duplicate_fragments", "`duplicate_on_same_strand(pairs)`", "`duplicate_on_different_strand(pairs)`"), summarise, total_fragments = sum(total_fragments), total_duplicate_fragments = sum(total_duplicate_fragments), `duplicate_on_same_strand(pairs)` = sum(`duplicate_on_same_strand(pairs)`), `duplicate_on_different_strand(pairs)` = sum(`duplicate_on_different_strand(pairs)`))
+}
