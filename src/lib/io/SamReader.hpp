@@ -14,6 +14,7 @@ public:
         , required_flags_(0)
         , skip_flags_(0)
         , record_count_(0)
+        , skipped_count_(0)
     {
         using boost::format;
         if (!fp_ || !(header_ = sam_hdr_read(fp_))) {
@@ -50,12 +51,19 @@ public:
                 ++record_count_;
                 return true;
             }
+            else {
+                ++skipped_count_;
+            }
         }
         return false;
     }
 
     std::size_t record_count() const {
         return record_count_;
+    }
+
+    std::size_t skipped_count() const {
+        return skipped_count_;
     }
 
     char const* path() const {
@@ -69,4 +77,5 @@ private:
     uint32_t required_flags_;
     uint32_t skip_flags_;
     std::size_t record_count_;
+    std::size_t skipped_count_;
 };
