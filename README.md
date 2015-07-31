@@ -6,7 +6,7 @@ The purpose of this program is due examine characteristics of duplicate reads wi
 
 # Methods
 ## Identifying duplicates
-Clusters of duplicates are identified by examining the CIGAR string and mate cigar at a given genomic location. These are then expanded as in SAMBLASTER and metrics calculated for each duplicated fragment.
+Clusters of duplicates are identified by examining the CIGAR string and mate cigar at a given genomic location. These are then expanded as in SAMBLASTER and metrics calculated for each duplicated fragment. Only properly paired reads are considered and this may result in slight changes in the percentage of duplicates for most experiments.
 
 # Input
 A BAM file containing reads for a single library is expected as duplication detection is not library aware. The BAM file must be coordinate sorted. Reads are expected to be named in the following convention `machine:run:flowcell:lane:tile:x_coord:y_coord` and this is used to determine the physical location of reads on the flow cell. Additionally, reads are expected to contain the `MC` tag indicating the mate cigar string of each read. This tag can be added with either Picard or SAMBLASTER.
