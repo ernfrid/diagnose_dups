@@ -19,13 +19,15 @@ struct BufferProcessor {
     Histogram<Tile> tile_duplicates;
     Histogram<Tile> tile_unique;
 
-    std::size_t total_dups;
+    std::size_t total_duplicated; //should include reads normally marked as unique
+    std::size_t total_dups;       //will only include those reads typically reported as duplicates (ie # fragments in duplicated cluster -1 )
     std::size_t total_fragments;
     std::size_t dup_on_same_strand;
     std::size_t dup_on_different_strand;
 
     BufferProcessor()
-        : total_dups(0)
+        : total_duplicated(0)
+        , total_dups(0)
         , total_fragments(0)
         , dup_on_same_strand(0)
         , dup_on_different_strand(0)
@@ -59,7 +61,8 @@ struct BufferProcessor {
     void operator()(ReadVector const& reads) {
         total_fragments += reads.size();
         if (reads.size() > 1) {
-            total_dups += reads.size();
+            total_dups += (reads.size() - 1);
+            total_duplicated += reads.size();
             ++number_of_dups[reads.size()];
             update_distances(reads);
         }
@@ -78,6 +81,7 @@ struct BufferProcessor {
         distances.merge(x.distances);
         number_of_dups.merge(x.number_of_dups);
         total_dups += x.total_dups;
+        total_duplicated += x.total_duplicated;
     }
 
     //XXX This is terrible and should abstracted out
@@ -86,6 +90,8 @@ struct BufferProcessor {
         os << " \"summary\": [\n";
         os << "    { "
            << "\"total_fragments\": " << total_fragments
+           << ", "
+           << "\"total_duplicated_fragments\": " << total_duplicated
            << ", "
            << "\"total_duplicate_fragments\": " << total_dups
            << ", "
@@ -164,6 +170,6 @@ struct BufferProcessor {
         
         os << "\n ]\n}\n";
 
-        std::cerr << total_dups << " duplicates found out of " << total_fragments << ".\n";
+        std::cerr << total_dups << " duplicates found out of " << total_fragments << " (" << (float) total_dups / total_fragments * 100.0 << "%).\n";
     }
 };
