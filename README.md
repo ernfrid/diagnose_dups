@@ -16,7 +16,8 @@ Metrics are reported in JSON. An example is present in the [test-data](https://g
 
 1. **summary** - Overall summary metrics for the data examined.
    1. **total_fragments** - The number of fragments examined.
-   2. **total_duplicate_fragments** - The number of fragments that were duplicated. This differs from other calculations as all fragments are counted as duplicate (a single one is not chosen as unique).
+   2. **total_duplicated_fragments** - The number of fragments that were duplicated. This differs from other calculations as all fragments are counted as duplicate (a single one is not chosen as unique).
+   3. **total_duplicate_fragments** - The number of duplicate fragments. This is the typical value reported by other software for calculating duplication rate.
    3.  **duplicate_on_same_strand(pairs)** - Both fragments arose from the same strand of the duplicated molecule (sense or antisense). Only calculated for fragments duplicated once. 
    4.  **duplicate_on_different_strand(pairs)** - The fragments arose from different strands of the duplicated molecule (one frome the sense strand, one from the antisense strand). Only calculated for fragments duplicated once.
 2. **distance** - Histogram of Euclidean distance within a flowcell tile between pairs of duplicated molecules.
