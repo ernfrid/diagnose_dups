@@ -44,13 +44,17 @@ aggregate_insert_size <- function(...) {
     ddply(new_frame, c("insert_size"), summarise, unique_count = sum(unique_count), duplicate_count = sum(duplicate_count))
 }
 
-aggregate_output <- function(...) {
-    json_data <- list(...)
+aggregate_output <- function(json_data) {
     aggregated_list <- list()
+    message("Aggregating summary info")
     aggregated_list$summary <- aggregate_summary(lapply(json_data,"[[", "summary"))
+    message("Aggregating distance info")
     aggregated_list$distance <- aggregate_distance(lapply(json_data, "[[", "distance"))
+    message("Aggregating #times duplicated info")
     aggregated_list$num_times_duplicated <- aggregate_times_duplicated(lapply(json_data, "[[", "num_times_duplicated"))
+    message("Aggregating insert size info")
     aggregated_list$insert_size <- aggregate_insert_size(lapply(json_data,"[[", "insert_size"))
+    message("Aggregating per tile stats")
     aggregated_list$per_tile_stats <- aggregate_location_data(lapply(json_data, "[[", "per_tile_stats"))
     aggregated_list
 }
