@@ -34,7 +34,16 @@ struct BufferProcessor {
     {}
 
     void update_distances(ReadVector const& reads) {
+        // XXX Potential algorithms for distinguishing library duplicates
+        // for each read:
+        //  scan other reads
+        //  if current read is not in the ignore set and scanned read is not in ignore set (will still need other stats so can't just skip) and distance < cutoff
+        //      then add scanned read to ignore
+        //
+        // Count up non-ignored reads. These are our library duplicates. Alternatively, only count dups to ignore. Then could do math...
+
         std::size_t n = reads.size();
+        std::size_t flow_cell_dups = 0;
         for (std::size_t i = 0; i < n; ++i) {
             ++dup_insert_sizes[abs(reads[i].insert_size)];
             nondup_insert_sizes[abs(reads[i].insert_size)] += 0;
@@ -44,6 +53,10 @@ struct BufferProcessor {
                 if (is_on_same_tile(reads[i], reads[j])) {
                     uint64_t flow_cell_distance = euclidean_distance(reads[i], reads[j]);
                     ++distances[flow_cell_distance];
+                    if (!reads[i].ignore) {
+                        reads[j].ignore = true;
+                        ++flow_cell_dups;
+                    }
                 }
                 //Only do the below for paired duplicates. If more than 2 copies, this inflates with pairwise comparisons
                 if (n == 2) {
