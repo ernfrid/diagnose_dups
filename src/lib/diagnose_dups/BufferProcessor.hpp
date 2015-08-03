@@ -22,6 +22,7 @@ struct BufferProcessor {
     std::size_t total_duplicated; //should include reads normally marked as unique
     std::size_t total_dups;       //will only include those reads typically reported as duplicates (ie # fragments in duplicated cluster -1 )
     std::size_t total_fragments;
+    std::size_t total_flow_cell_dups;
     std::size_t dup_on_same_strand;
     std::size_t dup_on_different_strand;
 
@@ -29,6 +30,7 @@ struct BufferProcessor {
         : total_duplicated(0)
         , total_dups(0)
         , total_fragments(0)
+        , total_flow_cell_dups(0)
         , dup_on_same_strand(0)
         , dup_on_different_strand(0)
     {}
@@ -43,7 +45,6 @@ struct BufferProcessor {
         // Count up non-ignored reads. These are our library duplicates. Alternatively, only count dups to ignore. Then could do math...
 
         std::size_t n = reads.size();
-        std::size_t flow_cell_dups = 0;
         for (std::size_t i = 0; i < n; ++i) {
             ++dup_insert_sizes[abs(reads[i].insert_size)];
             nondup_insert_sizes[abs(reads[i].insert_size)] += 0;
@@ -55,7 +56,7 @@ struct BufferProcessor {
                     ++distances[flow_cell_distance];
                     if (!reads[i].ignore) {
                         reads[j].ignore = true;
-                        ++flow_cell_dups;
+                        ++total_flow_cell_dups;
                     }
                 }
                 //Only do the below for paired duplicates. If more than 2 copies, this inflates with pairwise comparisons
@@ -107,6 +108,8 @@ struct BufferProcessor {
            << "\"total_duplicated_fragments\": " << total_duplicated
            << ", "
            << "\"total_duplicate_fragments\": " << total_dups
+           << ", "
+           << "\"total_flowcell_duplicates\": " << total_flow_cell_dups
            << ", "
            << "\"duplicate_on_same_strand(pairs)\": " << dup_on_same_strand
            << ", "
@@ -184,5 +187,6 @@ struct BufferProcessor {
         os << "\n ]\n}\n";
 
         std::cerr << total_dups << " duplicates found out of " << total_fragments << " (" << (float) total_dups / total_fragments * 100.0 << "%).\n";
+        std::cerr << total_dups - total_flow_cell_dups << " library duplicates found out of " << total_fragments - total_flow_cell_dups << " total fragments minus flow cell duplicates (" << (float) (total_dups - total_flow_cell_dups) / (total_fragments - total_flow_cell_dups) * 100.0 << "%).\n";
     }
 };
