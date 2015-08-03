@@ -16,7 +16,7 @@ struct Read {
     int x;
     int y;
     bool is_read1;
-    bool ignore; // XXX This is dumb. Should consider a better way to do this.
+    mutable bool ignore; // XXX This is dumb. Should consider a better way to do this.
 };
 
 void parse_read(bam1_t const* record, Read& read);
