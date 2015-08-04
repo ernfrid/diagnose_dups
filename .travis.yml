@@ -8,22 +8,32 @@ notifications:
         on_failure: always
         on_success: change
 
-before_install:
-    - sudo apt-get update
-    - sudo apt-get install cmake
-    - sudo pip install cpp-coveralls
+sudo: false
 
-install:
-    - sudo apt-get install libboost1.48-all-dev zlib1g-dev
+addons:
+    apt:
+        sources:
+            - boost-latest
+        packages:
+            - cmake
+            - libboost1.55-all-dev
+            - zlib1g-dev
+
+before_install:
+    - export PATH=$HOME/.local/bin:$PATH
+    - pip install cpp-coveralls --user `whoami`
 
 before_script:
+    - cd $HOME
     - wget https://github.com/samtools/htslib/archive/1.2.1.tar.gz -O /tmp/htslib-1.2.1.tar.gz
     - tar -xvf /tmp/htslib-1.2.1.tar.gz
-    - cd htslib-1.2.1/ && make && sudo make install
+    - cd htslib-1.2.1/ && make
+    - pwd
+    - ls -1 libhts*
     - cd $TRAVIS_BUILD_DIR
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=coverage
+    - cmake .. -DCMAKE_BUILD_TYPE=coverage -DHTSlib_LIBRARY=$HOME/htslib-1.2.1/libhts.a -DHTSlib_INCLUDE_DIR=$HOME/htslib-1.2.1/htslib
     - make VERBOSE=1
 
 script:
