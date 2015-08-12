@@ -27,6 +27,11 @@ bool is_on_same_tile(Read const& x, Read const& y) {
 }
 
 inline
+bool is_on_adjacent_tile(Read const& x, Read const& y) {
+    return adjacent_tile(x.tile, y.tile);
+}
+
+inline
 bool is_on_same_strand(Read const& lhs, Read const& rhs) {
     return lhs.is_read1 == rhs.is_read1;
 }
