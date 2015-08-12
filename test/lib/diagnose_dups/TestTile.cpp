@@ -34,6 +34,28 @@ TEST_F(TestTile, same_tile) {
     test_tile2.id = 1102;
     ASSERT_FALSE(same_tile(test_tile, test_tile2));
 }
+
+TEST_F(TestTile, adjacent_tile) {
+    Tile test_tile;
+    test_tile.flowcell = "a";
+    test_tile.lane = 1;
+    test_tile.id = 1202;
+
+    Tile test_tile2 = test_tile;
+    ASSERT_TRUE(adjacent_tile(test_tile, test_tile2));
+
+    test_tile2.id = 1303;
+    ASSERT_TRUE(adjacent_tile(test_tile, test_tile2));
+
+    test_tile2.id = 1101;
+    ASSERT_TRUE(adjacent_tile(test_tile, test_tile2));
+
+    test_tile2.id = 2202;
+    ASSERT_FALSE(adjacent_tile(test_tile, test_tile2));
+
+    test_tile2.id = 1204;
+    ASSERT_FALSE(adjacent_tile(test_tile, test_tile2));
+}
     
 TEST_F(TestTile, hash_value) {
     Tile test_tile;

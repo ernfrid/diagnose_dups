@@ -31,6 +31,29 @@ struct Tile {
            && lhs.id == rhs.id;
    }
 
+   friend bool adjacent_tile(Tile const& lhs, Tile const& rhs) {
+       if (lhs.flowcell == rhs.flowcell && lhs.lane == rhs.lane) {
+           //do more work
+           if ( (lhs.id > 2000) == (rhs.id > 2000) ) {
+               if ( abs( int(lhs.id / 100) - int(rhs.id / 100) ) < 2
+                       && abs( int(lhs. id % 100) - int(rhs.id % 100) ) < 2 ) {
+                   return true;
+               }
+               else {
+                   return false;
+               }
+           }
+           else {
+               return false;
+           }
+
+       }
+       else {
+           return false;
+       }
+   }
+
+
    friend bool operator<(Tile const& lhs, Tile const&rhs) {
        if (lhs.flowcell < rhs.flowcell) {
            return true;
