@@ -39,7 +39,7 @@ sam_lines = (
         #They should add 143 to insert sizes with 2 dups
         #should add 1 additional intertile comparison
         "machine:1:flowcell:2:1103:1:9	83	1	17000	60	5M	=	17153	-143	ACATC	AAFFF	MC:Z:5M",
-        "machine:1:flowcell:2:1104:1:9	83	1	17000	60	5M	=	17153	-143	ACATC	AAFFF	MC:Z:5M",
+        "machine:1:flowcell:2:1106:1:9	83	1	17000	60	5M	=	17153	-143	ACATC	AAFFF	MC:Z:5M",
 
         #This is a block of reads on a second chromosome to make sure we handle buffering correctly
         #It should add 1 nondup and 3 actual dups
@@ -55,7 +55,7 @@ sam_lines = (
 
         #These are the mates of the duplicates on the reverse strand. Ideally they shouldn't be counted.
         "machine:1:flowcell:2:1103:1:9	163	1	17153	60	5M	=	17000	143	ACATC	AAFFF	MC:Z:5M",
-        "machine:1:flowcell:2:1104:1:9	163	1	17153	60	5M	=	17000	143	ACATC	AAFFF	MC:Z:5M",
+        "machine:1:flowcell:2:1106:1:9	163	1	17153	60	5M	=	17000	143	ACATC	AAFFF	MC:Z:5M",
 
         "machine:1:flowcell:1:1104:1:9	163	2	18000	60	5M	=	17000	-1000	GTTTT	AAFFF	MC:Z:5M",
         "machine:1:flowcell:1:1104:1:1	147	2	18000	60	5M	=	17020	-980	TACAC	AAFFF	MC:Z:5M",

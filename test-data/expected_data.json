@@ -1,6 +1,6 @@
 {
  "summary": [
-    { "total_fragments": 15, "total_duplicated_fragments": 11, "total_duplicate_fragments": 7, "duplicate_on_same_strand(pairs)": 2, "duplicate_on_different_strand(pairs)": 0 }
+    { "total_fragments": 15, "total_duplicated_fragments": 11, "total_duplicate_fragments": 7, "total_flowcell_duplicates": 6, "duplicate_on_same_strand(pairs)": 2, "duplicate_on_different_strand(pairs)": 0 }
  ],
  "distance": [
     { "intratile_distance": 9, "count": 1 },
@@ -31,6 +31,6 @@
     { "flowcell": "flowcell", "lane": 2, "tile": 1101, "subtile_x": 0, "subtile_y": 0, "unique_count": 1, "duplicate_count": 0 },
     { "flowcell": "flowcell", "lane": 2, "tile": 1102, "subtile_x": 0, "subtile_y": 0, "unique_count": 1, "duplicate_count": 0 },
     { "flowcell": "flowcell", "lane": 2, "tile": 1103, "subtile_x": 0, "subtile_y": 0, "unique_count": 0, "duplicate_count": 1 },
-    { "flowcell": "flowcell", "lane": 2, "tile": 1104, "subtile_x": 0, "subtile_y": 0, "unique_count": 0, "duplicate_count": 1 }
+    { "flowcell": "flowcell", "lane": 2, "tile": 1106, "subtile_x": 0, "subtile_y": 0, "unique_count": 0, "duplicate_count": 1 }
  ]
 }
