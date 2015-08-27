@@ -59,6 +59,12 @@ struct BufferProcessor {
                         ++total_flow_cell_dups;
                     }
                 }
+                if (is_on_adjacent_tile(reads[i], reads[j])) {
+                    if (!reads[i].ignore && !reads[j].ignore) {
+                        reads[j].ignore = true;
+                        ++total_flow_cell_dups;
+                    }
+                }
                 //Only do the below for paired duplicates. If more than 2 copies, this inflates with pairwise comparisons
                 if (n == 2) {
                     if (is_on_same_strand(reads[i], reads[j])) {
