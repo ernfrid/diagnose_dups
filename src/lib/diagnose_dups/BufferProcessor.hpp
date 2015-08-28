@@ -114,7 +114,7 @@ struct BufferProcessor {
     }
 
     double standard_deviation_dup_rates() {
-        accumulator_set<double, stats<tag::variance> > acc;
+        accumulator_set<double, stats<tag::variance(lazy)> > acc;
         typedef Histogram<Tile>::VectorType TVec;
         TVec tiles = tile_unique.as_sorted_vector();
         for (TVec::const_iterator i = tiles.begin(); i != tiles.end(); ++i) {
@@ -143,7 +143,7 @@ struct BufferProcessor {
            << ", "
            << "\"duplicate_on_different_strand(pairs)\": " << dup_on_different_strand
            <<", "
-           << "\"subtile_dup_rate_stdev\": " << std::fixed << std_dev
+           << "\"subtile_dup_rate_stdev\": " << std::setprecision(7) << std_dev
            << " }\n ],\n";
         typedef Histogram<uint64_t>::VectorType HVec;
         HVec dist = distances.as_sorted_vector();
