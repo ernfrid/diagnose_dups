@@ -4,9 +4,18 @@
 #include "Read.hpp"
 #include "Tile.hpp"
 
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
+
 #include <cstddef>
 #include <iostream>
+#include <iomanip>
 #include <stdint.h>
+#include <math.h>
+
+using namespace boost::accumulators;
+
 
 struct BufferProcessor {
     typedef vector<Read> ReadVector;
@@ -104,8 +113,21 @@ struct BufferProcessor {
         total_duplicated += x.total_duplicated;
     }
 
+    double standard_deviation_dup_rates() {
+        accumulator_set<double, stats<tag::variance> > acc;
+        typedef Histogram<Tile>::VectorType TVec;
+        TVec tiles = tile_unique.as_sorted_vector();
+        for (TVec::const_iterator i = tiles.begin(); i != tiles.end(); ++i) {
+            acc( (double) tile_duplicates[i->name] / (double) (tile_duplicates[i->name] + i->count));
+        }
+        return sqrt(variance(acc));
+    }
+
     //XXX This is terrible and should abstracted out
     void write_output(std::ostream& os) {
+
+        double std_dev = standard_deviation_dup_rates();
+
         os << "{\n"; //start json
         os << " \"summary\": [\n";
         os << "    { "
@@ -120,6 +142,8 @@ struct BufferProcessor {
            << "\"duplicate_on_same_strand(pairs)\": " << dup_on_same_strand
            << ", "
            << "\"duplicate_on_different_strand(pairs)\": " << dup_on_different_strand
+           <<", "
+           << "\"subtile_dup_rate_stdev\": " << std::fixed << std_dev
            << " }\n ],\n";
         typedef Histogram<uint64_t>::VectorType HVec;
         HVec dist = distances.as_sorted_vector();
