@@ -142,8 +142,12 @@ struct BufferProcessor {
            << "\"duplicate_on_same_strand(pairs)\": " << dup_on_same_strand
            << ", "
            << "\"duplicate_on_different_strand(pairs)\": " << dup_on_different_strand
-           <<", "
+           << ", "
            << "\"subtile_dup_rate_stdev\": " << std::setprecision(7) << std_dev
+           << ", " 
+           << "\"dup_rate\": " << std::setprecision(7) << (float) total_dups / total_fragments
+           << ", "
+           << "\"estimated_library_dup_rate\": " << std::setprecision(7) << (float) (total_dups - total_flow_cell_dups) / (total_fragments - total_flow_cell_dups)
            << " }\n ],\n";
         typedef Histogram<uint64_t>::VectorType HVec;
         HVec dist = distances.as_sorted_vector();
