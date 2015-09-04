@@ -22,6 +22,8 @@ Metrics are reported in JSON. An example is present in the [test-data](https://g
    3.  **duplicate_on_same_strand(pairs)** - Both fragments arose from the same strand of the duplicated molecule (sense or antisense). Only calculated for fragments duplicated once. 
    4.  **duplicate_on_different_strand(pairs)** - The fragments arose from different strands of the duplicated molecule (one frome the sense strand, one from the antisense strand). Only calculated for fragments duplicated once.
    5.  **subtile_dup_rate_stdev** - The standard deviation of the duplicated fragment rate per subtile across all subtiles analyzed in the BAM. If the file contains data from different flowcells and lanes, then this value may not be informative. 
+   6.  **dup_rate** - The duplicatio rate of the reads in the BAM file. All reads are assumed to be from the same library.
+   7.  **estimated_library_dup_rate** - The estimated library duplication rate i.e. duplication rate ignoring assumed flow cell duplicates.
 2. **distance** - Histogram of Euclidean distance within a flowcell tile between pairs of duplicated molecules.
    1. **intratile_distance** - The Euclidean distance between the duplicate fragments on the flow cell. Only calculated if the fragments are within the same tile.
    2. **count** - The number of fragments with the given intratile distance.
