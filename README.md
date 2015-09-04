@@ -88,3 +88,7 @@ Tests should pass. The binary `diagnose_dups` can then be found under `diagnose_
 # Getting Help
 Please open issues on the github [repository](https://github.com/genome/diagnose_dups/issues) to obtain help.
 
+# Contributors
++ [David E Larson](https://github.com/ernfrid)
++ [Travis E Abbott](https://github.com/tabbott)
++ 
