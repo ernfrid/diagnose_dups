@@ -91,4 +91,3 @@ Please open issues on the github [repository](https://github.com/genome/diagnose
 # Contributors
 + [David E Larson](https://github.com/ernfrid)
 + [Travis E Abbott](https://github.com/tabbott)
-+ 
