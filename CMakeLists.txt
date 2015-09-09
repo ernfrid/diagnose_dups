@@ -41,6 +41,16 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wno-variadic-macros")
 endif ()
 
+# Find clock_gettime function
+find_library_providing(clock_gettime CLOCK_GETTIME_FOUND CLOCK_GETTIME_LIB rt)
+if(NOT CLOCK_GETTIME_FOUND)
+    message(FATAL_ERROR "Unable to find the clock_gettime function!")
+endif(NOT CLOCK_GETTIME_FOUND)
+
+if (CLOCK_GETTIME_LIB)
+    link_libraries(${CLOCK_GETTIME_LIB})
+endif (CLOCK_GETTIME_LIB)
+
 # make sure to pick up headers from library dirs
 include_directories("src/lib")
 
