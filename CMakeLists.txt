@@ -15,6 +15,8 @@ include(TestHelper)
 include(VersionHelper)
 include(ProjectHelper)
 include(PlatformChecks)
+include(PreDepends)
+PreDependsInit()
 
 configure_file(config/config.hpp.in config/config.hpp @ONLY)
 include_directories(${PROJECT_BINARY_DIR}/config)
