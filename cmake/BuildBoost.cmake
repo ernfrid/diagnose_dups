@@ -27,6 +27,7 @@ ExternalDependency_Add(
     BUILD_BYPRODUCTS ${Boost_LIBRARIES}
     ARGS
         URL ${BOOST_URL}
+        URL_MD5 "564efc7a6c7fb746fc06d7da24fa0c74"
         SOURCE_DIR ${BOOST_SRC}
         BINARY_DIR ${BOOST_SRC}
         CONFIGURE_COMMAND "./bootstrap.sh"
