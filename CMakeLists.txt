@@ -44,7 +44,7 @@ endif ()
 # Find clock_gettime function
 find_library_providing(clock_gettime CLOCK_GETTIME_FOUND CLOCK_GETTIME_LIB rt)
 if(NOT CLOCK_GETTIME_FOUND)
-    message(FATAL_ERROR "Unable to find the clock_gettime function!")
+    message(WARNING "Unable to find the clock_gettime function! Attempting proceed without linking.")
 endif(NOT CLOCK_GETTIME_FOUND)
 
 if (CLOCK_GETTIME_LIB)
