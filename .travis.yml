@@ -14,23 +14,16 @@ addons:
     apt:
         packages:
             - cmake
-            - zlib1g-dev
 
 before_install:
     - export PATH=$HOME/.local/bin:$PATH
     - pip install cpp-coveralls --user `whoami`
 
 before_script:
-    - cd $HOME
-    - wget https://github.com/samtools/htslib/archive/1.2.1.tar.gz -O /tmp/htslib-1.2.1.tar.gz
-    - tar -xvf /tmp/htslib-1.2.1.tar.gz
-    - cd htslib-1.2.1/ && make
-    - pwd
-    - ls -1 libhts*
     - cd $TRAVIS_BUILD_DIR
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=coverage -DHTSlib_LIBRARY=$HOME/htslib-1.2.1/libhts.a -DHTSlib_INCLUDE_DIR=$HOME/htslib-1.2.1/htslib
+    - cmake .. -DCMAKE_BUILD_TYPE=coverage
     - make VERBOSE=1
 
 script:
