@@ -47,9 +47,6 @@ Currently, `diagnose_dups` must be compiled from source code.
 
 * git
 * cmake 2.8+ ([cmake.org](http://cmake.org))
-* boost1.48 or greater 
-* zlib
-* htslib1.2.1 or greater
 
 ## Build Instructions
 
@@ -58,14 +55,7 @@ Currently, `diagnose_dups` must be compiled from source code.
 * For APT-based systems (Debian, Ubuntu), install the following packages:
 
 ```
-sudo apt-get install build-essential git-core cmake zlib1g-dev libncurses-dev libboost-dev
-```
-
-* For htslib:
-```
-wget https://github.com/samtools/htslib/archive/1.2.1.tar.gz -O /tmp/htslib-1.2.1.tar.gz
-tar -xvf /tmp/htslib-1.2.1.tar.gz
-cd htslib-1.2.1/ && make && sudo make install
+sudo apt-get install build-essential git-core cmake
 ```
 
 ### Clone the repository
