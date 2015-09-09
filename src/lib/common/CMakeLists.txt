@@ -7,5 +7,5 @@ set(SOURCES
     Utility.cpp
 )
 
-add_library(common ${SOURCES})
+xadd_library(common ${SOURCES})
 target_link_libraries(common rt ${Boost_LIBRARIES})

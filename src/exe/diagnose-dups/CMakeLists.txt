@@ -5,7 +5,7 @@ set(SOURCES
 )
 
 set(EXECUTABLE_NAME diagnose-dups)
-add_executable(${EXECUTABLE_NAME} ${SOURCES})
+xadd_executable(${EXECUTABLE_NAME} ${SOURCES})
 target_link_libraries(${EXECUTABLE_NAME}
     common 
     diagnose_dups

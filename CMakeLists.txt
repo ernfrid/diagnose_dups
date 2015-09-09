@@ -28,11 +28,9 @@ include_directories(${PROJECT_BINARY_DIR}/version)
 #include(BuildSamtools)
 #include_directories(${Samtools_INCLUDE_DIRS})
 #
-#set(REQUIRED_BOOST_LIBS program_options)
-#include(BuildBoost)
-#include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(Boost 1.48.0 COMPONENTS program_options timer system chrono REQUIRED)
+set(REQUIRED_BOOST_LIBS program_options timer system chrono )
+include(BuildBoost)
 include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(HTSlib REQUIRED)

@@ -12,11 +12,8 @@ sudo: false
 
 addons:
     apt:
-        sources:
-            - boost-latest
         packages:
             - cmake
-            - libboost1.55-all-dev
             - zlib1g-dev
 
 before_install:
