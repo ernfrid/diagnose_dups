@@ -25,16 +25,12 @@ configure_file(version/version.h.in version/version.h @ONLY)
 include_directories(${PROJECT_BINARY_DIR}/version)
 
 # Build dependencies (samtools and boost)
-#include(BuildSamtools)
-#include_directories(${Samtools_INCLUDE_DIRS})
-#
+include(BuildHtslib)
+include_directories(${HTSlib_INCLUDE_DIRS})
 
 set(REQUIRED_BOOST_LIBS program_options timer system chrono )
 include(BuildBoost)
 include_directories(${Boost_INCLUDE_DIRS})
-
-find_package(HTSlib REQUIRED)
-include_directories(${HTSlib_INCLUDE_DIRS})
 
 if (CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -ansi -pedantic")
