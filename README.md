@@ -1,5 +1,8 @@
 [![Build Status](https://travis-ci.org/genome/diagnose_dups.svg?branch=master)](https://travis-ci.org/genome/diagnose_dups)
 [![Coverage Status](https://coveralls.io/repos/genome/diagnose_dups/badge.svg)](https://coveralls.io/r/genome/diagnose_dups)
+[![Version](https://img.shields.io/github/release/genome/diagnose_dups.svg)](https://github.com/genome/diagnose_dups/releases)
+[![DOI](http://img.shields.io/badge/DOI-10.5281%20%2F%20zenodo.30681-blue.svg)](http://dx.doi.org/10.5281/zenodo.30681)
+[![License](https://img.shields.io/github/license/genome/diagnose_dups.svg)](LICENSE.txt)
 
 # Description
 The purpose of this program is due examine characteristics of duplicate reads within a coordinate sorted BAM file. It is intended to be run by bioinformaticians interested in examining duplicate reads within a BAM file. Metrics are output as JSON files that can then be analyzed in R or the statistical package of your choice. Some R scripts are in the process of being written and exist [here](https://github.com/genome/diagnose_dups/tree/master/scripts]) but assume a relatively old version of ggplot. An example showing spatial heterogeneity of duplication rate is shown below:
