@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/github/license/genome/diagnose_dups.svg)](LICENSE.txt)
 
 # Description
-The purpose of this program is due examine characteristics of duplicate reads within a coordinate sorted BAM file. It is intended to be run by bioinformaticians interested in examining duplicate reads within a BAM file. Metrics are output as JSON files that can then be analyzed in R or the statistical package of your choice. Some R scripts are in the process of being written and exist [here](https://github.com/genome/diagnose_dups/tree/master/scripts]) but assume a relatively old version of ggplot. An example showing spatial heterogeneity of duplication rate is shown below:
+The purpose of this program is due examine characteristics of duplicate reads within a coordinate sorted BAM file. It is intended to be run by bioinformaticians interested in examining duplicate reads within a BAM file. Metrics are output as JSON files that can then be analyzed in R or the statistical package of your choice. Some R scripts are in the process of being written and exist [here](https://github.com/genome/diagnose_dups/tree/master/scripts/) but assume a relatively old version of ggplot. An example showing spatial heterogeneity of duplication rate is shown below:
 
 ![Example flow cell](figures/example.png)
 
@@ -41,7 +41,7 @@ Metrics are reported in JSON. An example is present in the [test-data](https://g
    2. **lane** - The lane within the flow cell. Derived from the read names.
    3. **tile** - The tile location within the lane. Derived from the read names.
    4. **subtile_x** - The subtile x-coordinate within the tile. Currently these are binned as x-location in read name divided by 1000.
-   5. **subtile_y** - The subtile y-coordinate within the tile. Current these are binned as y-location in read name divided by 1000.
+   5. **subtile_y** - The subtile y-coordinate within the tile. Currently these are binned as y-location in read name divided by 1000.
    6. **unique_count** - The number of unique fragments within this subtile.
    7. **duplicate_count** - The number of duplicated fragments within this subtile.
 
