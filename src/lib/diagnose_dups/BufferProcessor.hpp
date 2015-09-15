@@ -116,7 +116,7 @@ struct BufferProcessor {
     double standard_deviation_dup_rates() {
         accumulator_set<double, stats<tag::variance(lazy)> > acc;
         typedef Histogram<Tile>::VectorType TVec;
-        TVec tiles = tile_unique.as_sorted_vector();
+        TVec tiles = tile_unique.as_count_sorted_vector();
         for (TVec::const_iterator i = tiles.begin(); i != tiles.end(); ++i) {
             acc( (double) tile_duplicates[i->name] / (double) (tile_duplicates[i->name] + i->count));
         }
