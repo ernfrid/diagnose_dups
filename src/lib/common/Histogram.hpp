@@ -35,9 +35,14 @@ struct Histogram {
         bool operator==(Bin const& rhs) const {
             return name == rhs.name && count == rhs.count;
         }
+
     };
 
     typedef std::vector<Bin> VectorType;
+
+    bool compare_count(Bin const& lhs, Bin const& rhs) const {
+        return lhs.count < rhs.count;
+    }
 
     CountType& operator[](KeyType const& key) {
         return data[key];
@@ -50,6 +55,18 @@ struct Histogram {
             rv.push_back(Bin(i->first, i->second));
         }
         std::sort(rv.begin(), rv.end());
+        return rv;
+    }
+
+    //XXX This should ideally be combined with as_sorted_vector above
+    //with a parameter for sorting passed in
+    VectorType as_count_sorted_vector() const {
+        VectorType rv;
+        rv.reserve(size());
+        for (const_iterator i = begin(); i != end(); ++i) {
+            rv.push_back(Bin(i->first, i->second));
+        }
+        std::sort(rv.begin(), rv.end(), compare_count);
         return rv;
     }
 
