@@ -40,9 +40,11 @@ struct Histogram {
 
     typedef std::vector<Bin> VectorType;
 
-    bool compare_count(Bin const& lhs, Bin const& rhs) const {
-        return lhs.count < rhs.count;
-    }
+    struct CompareCount {
+        bool operator()(Bin const& lhs, Bin const& rhs) {
+            return lhs.count < rhs.count;
+        }
+    };
 
     CountType& operator[](KeyType const& key) {
         return data[key];
@@ -66,7 +68,8 @@ struct Histogram {
         for (const_iterator i = begin(); i != end(); ++i) {
             rv.push_back(Bin(i->first, i->second));
         }
-        std::sort(rv.begin(), rv.end(), compare_count);
+        //XXX This is goofy. Not sure why this has to be constructed here, but examples online show anonymous structs
+        std::sort(rv.begin(), rv.end(), CompareCount());
         return rv;
     }
 
