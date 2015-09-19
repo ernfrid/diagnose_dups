@@ -86,7 +86,7 @@ TEST(TestUtility_nf, parse_string_to_cigar_vector) {
     char const* cigar_string = "2S7M1I5M1I6M1I27M1S";
     typedef std::vector<uint32_t> vec_type;
 
-    int const iters = 5000000;
+    int const iters = 500;
     std::cerr << "Parsing cigar string [" << cigar_string << "] "
         << iters << " times...\n";
     std::vector<vec_type> vecs(iters);
