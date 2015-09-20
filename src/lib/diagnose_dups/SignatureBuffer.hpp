@@ -16,8 +16,8 @@ class SignatureBuffer {
 
         SignatureBuffer(int32_t window_size, BufferProcessor processor) 
             : window_(window_size)
-            , processor_(processor) {
-            }
+            , processor_(processor)
+        {}
 
         void add(bam1_t const* record) {
             Signature sig(record);//TODO this might throw
@@ -57,5 +57,5 @@ class SignatureBuffer {
     private:
         int32_t window_;
         BufferProcessor processor_;
-        std::map<Signature, std::vector<Read> > buffer_;
+        SigRead buffer_;
 };
