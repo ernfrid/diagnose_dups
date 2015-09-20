@@ -46,7 +46,7 @@ Metrics are reported in JSON. An example is present in the [test-data](https://g
    7. **duplicate_count** - The number of duplicated fragments within this subtile.
 
 # Compilation and Installation
-Currently, `diagnose_dups` must be compiled from source code.
+Currently, `diagnose_dups` must be compiled from source code. It is routinely tested using both the `gcc` and `clang` compilers on Ubuntu 10.04 and Ubuntu 12.04 and with `clang` on Mac OS X 10.10. It should work on other Unix-based operating systems, but they are not supported.
 
 ## Dependencies
 
