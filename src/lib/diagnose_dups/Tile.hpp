@@ -37,7 +37,7 @@ struct Tile : FusionBase<TileStorage, Tile> {
             && lhs.lane == rhs.lane
             && (lhs.id > 2000) == (rhs.id > 2000)
             && std::abs( int(lhs.id / 100) - int(rhs.id / 100) ) < 2
-            && std::abs( int(lhs. id % 100) - int(rhs.id % 100) ) < 2
+            && std::abs( int(lhs.id % 100) - int(rhs.id % 100) ) < 2
             ;
     }
 
