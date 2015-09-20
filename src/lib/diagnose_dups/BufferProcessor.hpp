@@ -1,8 +1,9 @@
 #pragma once
 
-#include "common/Histogram.hpp"
 #include "Read.hpp"
 #include "Tile.hpp"
+#include "common/Histogram.hpp"
+#include "common/Utility.hpp"
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
@@ -68,6 +69,7 @@ struct BufferProcessor {
                         ++total_flow_cell_dups;
                     }
                 }
+                else
                 if (is_on_adjacent_tile(reads[i], reads[j])) {
                     if (!reads[i].ignore && !reads[j].ignore) {
                         reads[j].ignore = true;
@@ -86,7 +88,7 @@ struct BufferProcessor {
             }
         }
     }
-    
+
     void operator()(ReadVector const& reads) {
         total_fragments += reads.size();
         if (reads.size() > 1) {
@@ -144,7 +146,7 @@ struct BufferProcessor {
            << "\"duplicate_on_different_strand(pairs)\": " << dup_on_different_strand
            << ", "
            << "\"subtile_dup_rate_stdev\": " << std::setprecision(7) << std_dev
-           << ", " 
+           << ", "
            << "\"dup_rate\": " << std::setprecision(7) << (float) total_dups / total_fragments
            << ", "
            << "\"estimated_library_dup_rate\": " << std::setprecision(7) << (float) (total_dups - total_flow_cell_dups) / (total_fragments - total_flow_cell_dups)
@@ -217,7 +219,7 @@ struct BufferProcessor {
                 os << ",\n";
             }
         }
-        
+
         os << "\n ]\n}\n";
 
         std::cerr << total_dups << " duplicates found out of " << total_fragments << " (" << (float) total_dups / total_fragments * 100.0 << "%).\n";
