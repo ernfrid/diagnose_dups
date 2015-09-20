@@ -1,5 +1,9 @@
 language: cpp
 
+os:
+    - linux
+    - osx
+
 compiler:
     - gcc
     - clang
@@ -10,6 +14,11 @@ notifications:
         on_success: change
 
 sudo: false
+
+matrix:
+    exclude:
+        - os: osx
+          compiler: gcc
 
 addons:
     apt:
