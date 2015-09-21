@@ -6,11 +6,14 @@
 #include "diagnose_dups/Signature.hpp"
 #include "io/BamRecord.hpp"
 #include "io/SamReader.hpp"
+#include "io/SamReaderThread.hpp"
 
 #include <sam.h>
 
 #include <boost/format.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/timer/timer.hpp>
+#include <boost/thread/thread.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -36,37 +39,28 @@ namespace {
         }
 
         SamReader reader(opts.input_file.c_str(), "r");
+        SamReaderThread treader(reader, opts.ring_buffer_size);
+        boost::thread prod_thread(boost::ref(treader));
+
         reader.required_flags(BAM_FPROPER_PAIR);
         reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FSUPPLEMENTARY);
 
-        BamRecord record;
         BufferProcessor proc;
         SignatureBuffer buffer(1000, proc);
         std::size_t parse_failures = 0;
-        while (reader.next(record)) {
-            buffer.add(record);
-            /*
-            int rv = bundle.add(record);
-            if (rv == -1) {
-                if (++parse_failures <= 5) {
-                    std::cerr << "Failed to parse bam record, name = "
-                        << bam_get_qname(record) << "\n";
-                    if (parse_failures == 5)
-                        std::cerr << "max warning limit reached, disabling...\n";
-                }
+        BOOST_AUTO(&ring, treader.ring());
 
-                // XXX: would you rather abort?
-                continue;
+        BamRecord* record;
+        while (treader.running() || !ring.empty()) {
+            uint32_t n = ring.read_buffer(record);
+            for (uint32_t i = 0; i < n; ++i) {
+                buffer.add(record[i]);
+                ring.advance_read(1);
             }
-            else if (rv == 0) {
-                proc.process(bundle);
-                bundle.clear();
-                //if rv was 0 then the attempt to previously add this read
-                //failed and it needs to be re-added to this fresh bundle
-                bundle.add(record);
-            }
-        */
         }
+        treader.stop();
+        prod_thread.join();
+
         if (parse_failures) {
             double pct = parse_failures * 100.0;
             pct /= reader.record_count();

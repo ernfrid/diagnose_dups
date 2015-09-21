@@ -42,6 +42,8 @@ po::options_description Options::_options_description() {
         ("version,v", "output the version")
         ("input,i", po::value<>(&input_file)->default_value("-"), "the input file")
         ("output,o", po::value<>(&output_file)->default_value("-"), "the output file")
+        ("buffer-size,b", po::value<>(&ring_buffer_size)->default_value(4096),
+            "size of the ring buffer between io and processing thread (# bam records)")
         ;
     return desc;
 }

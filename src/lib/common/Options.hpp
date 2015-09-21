@@ -2,6 +2,7 @@
 
 #include <boost/program_options.hpp>
 
+#include <stdint.h>
 #include <string>
 
 using namespace std;
@@ -20,6 +21,7 @@ class Options {
 
         std::string input_file;
         std::string output_file;
+        uint32_t ring_buffer_size;
 };
 
 

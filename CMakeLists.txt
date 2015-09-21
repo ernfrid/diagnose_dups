@@ -28,7 +28,7 @@ include_directories(${PROJECT_BINARY_DIR}/version)
 include(BuildHtslib)
 include_directories(${HTSlib_INCLUDE_DIRS})
 
-set(REQUIRED_BOOST_LIBS program_options timer system chrono )
+set(REQUIRED_BOOST_LIBS thread program_options timer system chrono)
 include(BuildBoost)
 include_directories(${Boost_INCLUDE_DIRS})
 
