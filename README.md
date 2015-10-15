@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/genome/diagnose_dups.svg?branch=master)](https://travis-ci.org/genome/diagnose_dups)
 [![Coverage Status](https://coveralls.io/repos/genome/diagnose_dups/badge.svg)](https://coveralls.io/r/genome/diagnose_dups)
 [![Version](https://img.shields.io/github/release/genome/diagnose_dups.svg)](https://github.com/genome/diagnose_dups/releases)
-[![DOI](http://img.shields.io/badge/DOI-10.5281%20%2F%20zenodo.30681-blue.svg)](http://dx.doi.org/10.5281/zenodo.30681)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31983.svg)](http://dx.doi.org/10.5281/zenodo.31983)
 [![License](https://img.shields.io/github/license/genome/diagnose_dups.svg)](LICENSE.txt)
 
 # Description
