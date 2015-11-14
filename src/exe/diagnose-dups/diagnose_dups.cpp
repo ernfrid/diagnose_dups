@@ -51,8 +51,13 @@ namespace {
         BOOST_AUTO(&ring, treader.ring());
 
         BamRecord* record;
+        uint64_t consumer_busywaits = 0;
         while (treader.running() || !ring.empty()) {
             uint32_t n = ring.read_buffer(record);
+            if (n == 0) {
+                ++consumer_busywaits;
+            }
+
             for (uint32_t i = 0; i < n; ++i) {
                 buffer.add(record[i]);
                 ring.advance_read(1);
@@ -73,7 +78,10 @@ namespace {
         // don't forget the rest of the buffer
         buffer.process_all();
         buffer.write_output(*out_ptr);
+        std::cerr << "Producer busywaits: " << treader.busywaits() << "\n";
+        std::cerr << "Consumer busywaits: " << consumer_busywaits << "\n";
     }
+
 }
 
 int main(int argc, char** argv) {

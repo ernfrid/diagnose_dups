@@ -15,6 +15,7 @@ public:
         , running_(true)
         , buf_(new BamRecord[ring_size])
         , ring_(buf_, ring_size)
+        , busywaits_(0)
     {
     }
 
@@ -28,8 +29,10 @@ public:
         uint32_t n = 0;
         while (running_.load(boost::memory_order_acquire)) {
 
-            if ((n = ring_.write_buffer(ptr)) == 0)
+            if ((n = ring_.write_buffer(ptr)) == 0) {
+                ++busywaits_;
                 continue; // ring is full
+            }
 
             assert(ptr);
 
@@ -55,9 +58,14 @@ public:
         return running_.load(boost::memory_order_acquire);
     }
 
+    uint64_t busywaits() const {
+        return busywaits_;
+    }
+
 private:
     SamReader& reader_;
     boost::atomic<bool> running_;
     BamRecord* buf_;
     RingBuffer<BamRecord> ring_;
+    uint64_t busywaits_;
 };
