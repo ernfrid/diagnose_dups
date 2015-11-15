@@ -22,6 +22,7 @@ class Options {
         std::string input_file;
         std::string output_file;
         uint32_t ring_buffer_size;
+        bool use_io_thread;
 };
 
 

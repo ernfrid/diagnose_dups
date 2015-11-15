@@ -22,6 +22,11 @@ endforeach(libname ${REQUIRED_BOOST_LIBS})
 message("Extracting boost from ${BOOST_URL}")
 message("Boost build log can be found at ${BOOST_LOG}")
 
+set(_boost_toolset gcc)
+if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+    set(_boost_toolset clang)
+endif()
+
 ExternalDependency_Add(
     boost-1.59
     BUILD_BYPRODUCTS ${Boost_LIBRARIES}
@@ -29,10 +34,10 @@ ExternalDependency_Add(
         URL ${BOOST_URL}
         SOURCE_DIR ${BOOST_SRC}
         BINARY_DIR ${BOOST_SRC}
-        CONFIGURE_COMMAND "./bootstrap.sh"
+        CONFIGURE_COMMAND ./bootstrap.sh --with-toolset=${_boost_toolset}
         BUILD_COMMAND
             echo "Building boost, build log is ${BOOST_LOG}" &&
-            ./b2 --prefix=${BOOST_ROOT} --layout=system link=static
+            ./b2 toolset=${_boost_toolset} --prefix=${BOOST_ROOT} --layout=system link=static
                     threading=multi install ${BOOST_BUILD_LIBS} > ${BOOST_LOG} 2>&1
         INSTALL_COMMAND "true"
 )

@@ -6,14 +6,13 @@
 #include "diagnose_dups/Signature.hpp"
 #include "io/BamRecord.hpp"
 #include "io/SamReader.hpp"
-#include "io/SamReaderThread.hpp"
+#include "io/SamProducer.hpp"
 
 #include <sam.h>
 
 #include <boost/format.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/timer/timer.hpp>
-#include <boost/thread/thread.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -39,47 +38,24 @@ namespace {
         }
 
         SamReader reader(opts.input_file.c_str(), "r");
-        SamReaderThread treader(reader, opts.ring_buffer_size);
-        boost::thread prod_thread(boost::ref(treader));
-
         reader.required_flags(BAM_FPROPER_PAIR);
         reader.skip_flags(BAM_FSECONDARY | BAM_FQCFAIL | BAM_FSUPPLEMENTARY);
 
+        boost::scoped_ptr<SamProducerBase> prod;
+        if (opts.use_io_thread)
+            prod.reset(new SamProducerThread(reader, opts.ring_buffer_size));
+        else
+            prod.reset(new SamProducer(reader));
+
         BufferProcessor proc;
         SignatureBuffer buffer(1000, proc);
-        std::size_t parse_failures = 0;
-        BOOST_AUTO(&ring, treader.ring());
 
-        BamRecord* record;
-        uint64_t consumer_busywaits = 0;
-        while (treader.running() || !ring.empty()) {
-            uint32_t n = ring.read_buffer(record);
-            if (n == 0) {
-                ++consumer_busywaits;
-            }
-
-            for (uint32_t i = 0; i < n; ++i) {
-                buffer.add(record[i]);
-                ring.advance_read(1);
-            }
-        }
-        treader.stop();
-        prod_thread.join();
-
-        if (parse_failures) {
-            double pct = parse_failures * 100.0;
-            pct /= reader.record_count();
-
-            std::cerr << "\nWARNING: failed to parse read names for " << parse_failures
-                << " / " << reader.record_count() << " records ("
-                << fixed << setprecision(2) << pct << "%).\n\n";
-        }
+        prod->for_each_record(buffer);
+        prod.reset(); // will stop and join if using an io thread
 
         // don't forget the rest of the buffer
         buffer.process_all();
         buffer.write_output(*out_ptr);
-        std::cerr << "Producer busywaits: " << treader.busywaits() << "\n";
-        std::cerr << "Consumer busywaits: " << consumer_busywaits << "\n";
     }
 
 }

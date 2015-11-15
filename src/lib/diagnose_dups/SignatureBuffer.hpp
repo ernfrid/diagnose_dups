@@ -29,6 +29,10 @@ class SignatureBuffer {
             }
         }
 
+        void operator()(bam1_t const* record) {
+            add(record);
+        }
+
         void process(Signature const& last_sig) {
             if (buffer_.empty()) {
                 return;
