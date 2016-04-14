@@ -43,12 +43,17 @@ struct Histogram {
         return data[key];
     }
 
-    VectorType as_sorted_vector() const {
+    VectorType as_vector() const {
         VectorType rv;
         rv.reserve(size());
         for (const_iterator i = begin(); i != end(); ++i) {
             rv.push_back(Bin(i->first, i->second));
         }
+        return rv;
+    }
+
+    VectorType as_sorted_vector() const {
+        VectorType rv = as_vector();
         std::sort(rv.begin(), rv.end());
         return rv;
     }

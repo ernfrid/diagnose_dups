@@ -28,16 +28,16 @@ include_directories(${PROJECT_BINARY_DIR}/version)
 include(BuildHtslib)
 include_directories(${HTSlib_INCLUDE_DIRS})
 
-set(REQUIRED_BOOST_LIBS program_options timer system chrono )
+set(REQUIRED_BOOST_LIBS thread program_options timer system chrono)
 include(BuildBoost)
 include_directories(${Boost_INCLUDE_DIRS})
 
 if(${CMAKE_C_COMPILER_ID} MATCHES "GNU|Clang")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -ansi -pedantic")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -pedantic")
 endif ()
 
-if(${CMAKE_C_COMPILER_ID} MATCHES "GNU|Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-long-long -Wall -ansi")
+if(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-long-long -Wall")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wno-variadic-macros")
 endif ()
 
@@ -77,3 +77,6 @@ add_subdirectory(integration-test)
 
 ## Packaging
 include(PackageInfo.cmake)
+
+message(STATUS "C flags: ${CMAKE_C_FLAGS}")
+message(STATUS "CXX flags: ${CMAKE_CXX_FLAGS}")

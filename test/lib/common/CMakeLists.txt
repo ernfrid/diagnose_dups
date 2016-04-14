@@ -10,4 +10,5 @@ add_unit_tests(TestCommonLib
     TestHistogram.cpp
     TestUtility.cpp
     TestParse.cpp
+    TestRingBuffer.cpp
     )

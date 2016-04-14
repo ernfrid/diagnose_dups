@@ -32,5 +32,18 @@ class TestDiagnoseDups(IntegrationTest, unittest.TestCase):
         self.assertEqual(0, rv)
         self.assertFilesEqual(expected_file, output_file)
 
+    def test_program_threaded(self):
+        expected_file = "expected_data.json"
+        output_file = self.tempFile("output.json")
+        input_bam = "integration_test.bam"
+        cmdline = " ".join([self.exe_path, input_bam, '-t', '>', output_file])
+        print "Executing: ", cmdline
+        print "CWD: ", os.getcwd()
+
+        rv = subprocess.call(cmdline, shell=True)
+        print "Return value: ", rv
+        self.assertEqual(0, rv)
+        self.assertFilesEqual(expected_file, output_file)
+
 if __name__ == "__main__":
     main()
