@@ -1,6 +1,13 @@
 #include "Signature.hpp"
 #include "common/Utility.hpp"
 
+#include <boost/format.hpp>
+
+#include <stdexcept>
+#include <cstdint>
+
+using boost::format;
+
 Signature::Signature(bam1_t const* record) {
     parse(record);
 }
@@ -41,9 +48,9 @@ int32_t Signature::_calculate_mate_position(bam1_t const* record) {
 
     }
     else {
-        //no MC tag on this alignment...
-        //what DO WE DO
-        //htslib with no cigar assume pos+1 (also for unmapped)
+        throw std::runtime_error(str(format(
+            "Unable to parse mate cigar for read named: %1%. Read must have an MC tag and does not."
+            ) % bam_get_qname(record)));
     }
     return tmp_mpos;
 }
